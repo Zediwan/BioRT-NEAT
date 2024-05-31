@@ -1,1 +1,1 @@
-__all__ = ["activation_function", "extended_enum", "gene", "genome"]
+__all__ = ["extended_enum", "gene", "genome"]

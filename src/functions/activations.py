@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-from .extended_enum import ExtendedEnum
+from ..extended_enum import ExtendedEnum
 import random
-from neat.activations import *
+import math
 
-
-class ActivationFunction(ExtendedEnum):
+class Activations(ExtendedEnum):
     def sigmoid_activation(z):
         z = max(-60.0, min(60.0, 5.0 * z))
         return 1.0 / (1.0 + math.exp(-z))
@@ -65,7 +64,6 @@ class ActivationFunction(ExtendedEnum):
         else:
             return z
 
-
     def log_activation(z):
         z = max(1e-7, z)
         return math.log(z)
@@ -110,5 +108,5 @@ class ActivationFunction(ExtendedEnum):
     SOFTPLUS = softplus_activation
 
     @staticmethod
-    def get_random_activation_function() -> ActivationFunction:
-        return random.choice(ActivationFunction.get_options())
+    def get_random_activation_function() -> Activations:
+        return random.choice(Activations.get_options())
