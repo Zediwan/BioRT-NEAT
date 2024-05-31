@@ -3,7 +3,7 @@ from __future__ import annotations
 from .gene import NodeGene, ConnectionGene
 
 
-class Genome:
+class NeatNetwork:
     def __init__(self) -> None:
         self.nodes: list[NodeGene]
         self.connections: list[ConnectionGene]
@@ -46,7 +46,7 @@ class Genome:
         connection.enabled = False
     
     @classmethod
-    def crossover(cls, nn1: Genome, nn2: Genome) -> Genome:
+    def crossover(cls, nn1: NeatNetwork, nn2: NeatNetwork) -> NeatNetwork:
         # check same connections / nodes and choose randomly
         # randomly choose 
         # TODO

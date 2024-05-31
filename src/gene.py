@@ -5,6 +5,7 @@ from itertools import count
 from .extended_enum import ExtendedEnum
 from .activation_function import ActivationFunction
 
+
 class NodeGeneType(ExtendedEnum):
     # Sensor and input are the same
     SENSOR = 1 
@@ -18,6 +19,10 @@ class Gene(ABC):
     
     @abstractmethod
     def mutate(self) -> None:
+        pass
+
+    @abstractmethod
+    def copy(self) -> None:
         pass
         
 class NodeGene(Gene):
@@ -47,20 +52,23 @@ class ConnectionGene(Gene):
     connection_archive: dict[tuple[int, int], int] = {}
     innovation_number_index = count()
 
-    def __init__(self, _in: NodeGene, _out: NodeGene, weight = None) -> None:
+    def __init__(self, _from: NodeGene, _to: NodeGene, weight = None) -> None:
         super().__init__()
-        self._in: NodeGene = _in
-        self._out: NodeGene = _out
+        self._from: NodeGene = _from
+        self._to: NodeGene = _to
         if weight is None:
             weight = random.uniform()
         self.weight = weight
         self.enabled = True
         #self.recurrent = False
-        self.INNOVATION_NUMBER: int = ConnectionGene.get_innovation_number(_in, _out)
+        self.INNOVATION_NUMBER: int = ConnectionGene.get_innovation_number(_from, _to)
     
+    def equals(self, connection: ConnectionGene) -> bool:
+        return self._from.__eq__(connection._from) and self._to.__eq__(connection._to)
+
     @staticmethod
-    def get_innovation_number(_in: NodeGene, _out: NodeGene) -> int:
-        key = (_in, _out)
+    def get_innovation_number(_from: NodeGene, _to: NodeGene) -> int:
+        key = (_from, _to)
 
         if key not in ConnectionGene.connection_archive:
             ConnectionGene.connection_archive[key] = next(ConnectionGene.innovation_number_index)
