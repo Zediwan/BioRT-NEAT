@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-from ..extended_enum import ExtendedEnum
+from enum import Enum
 import random
 import math
 
-class Activations(ExtendedEnum):
+
+class Activations(Enum):
+    #region functions
     def sigmoid_activation(z):
         z = max(-60.0, min(60.0, 5.0 * z))
         return 1.0 / (1.0 + math.exp(-z))
@@ -88,6 +90,7 @@ class Activations(ExtendedEnum):
 
     def cube_activation(z):
         return z ** 3
+    #endregion
 
     TANH = tanh_activation
     SIGMOID = sigmoid_activation
@@ -108,5 +111,23 @@ class Activations(ExtendedEnum):
     SOFTPLUS = softplus_activation
 
     @staticmethod
-    def get_random_activation_function() -> Activations:
-        return random.choice(Activations.get_options())
+    def get_random_activation_function():
+        return random.choice([
+            Activations.TANH,
+            Activations.SIGMOID,
+            Activations.SIN,
+            Activations.GAUSS,
+            Activations.RELU,
+            Activations.ELU,
+            Activations.SELU,
+            Activations.LELU,
+            Activations.EXP,
+            Activations.HAT,
+            Activations.INV,
+            Activations.LOG,
+            Activations.CUBE,
+            Activations.SQUARE,
+            Activations.CLAMPED,
+            Activations.ID,
+            Activations.SOFTPLUS
+            ])

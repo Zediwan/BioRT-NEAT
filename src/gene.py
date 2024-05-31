@@ -1,7 +1,6 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 import random
-from .extended_enum import ExtendedEnum
 from .functions.activations import Activations
 from .functions.aggregations import Aggregations
 
@@ -36,7 +35,7 @@ class Gene(ABC):
     def crossover(g1: Gene, g2: Gene) -> Gene:
         pass
 
-class NodeGeneType(ExtendedEnum):
+class NodeGeneType():
     # Sensor and input are the same
     SENSOR = 1
     INPUT = 1
@@ -49,12 +48,14 @@ class NodeGene(Gene):
     AGGREGATION_FUNCTION_MUTATION_CHANCE = 0
     RESPONSE_FUNCTION_MUTATION_CHANCE = 0
 
-    def __init__(self, bias: float = 1, af: Activations = None, aggregation = None, response: Activations = None) -> None:
-        super().__init__()
+    def __init__(self, key: str, bias: float = 1, af: Activations = None, aggregation = None, response: Activations = None) -> None:
+        super().__init__(key)
         self.bias = bias
         if af is None:
             af = Activations.get_random_activation_function()
         self.activation = af
+        if aggregation is None:
+            aggregation = Aggregations.get_random_aggregation_function()
         self.aggregation = aggregation
         if response is None:
             response = Activations.get_random_activation_function()
