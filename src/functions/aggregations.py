@@ -42,7 +42,7 @@ class Aggregations():
     MEAN = mean_aggregation
 
     @staticmethod
-    def get_random_aggregation_function() -> Aggregations:
+    def get_random() -> Aggregations:
         return random.choice([
             Aggregations.MAX,
             Aggregations.MAX_ABS,

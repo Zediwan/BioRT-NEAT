@@ -52,13 +52,13 @@ class NodeGene(Gene):
         super().__init__(key)
         self.bias = bias
         if af is None:
-            af = Activations.get_random_activation_function()
+            af = Activations.get_random()
         self.activation = af
         if aggregation is None:
-            aggregation = Aggregations.get_random_aggregation_function()
+            aggregation = Aggregations.get_random()
         self.aggregation = aggregation
         if response is None:
-            response = Activations.get_random_activation_function()
+            response = Activations.get_random()
         self.response = response
     
     def mutate(self) -> None:
@@ -76,13 +76,13 @@ class NodeGene(Gene):
         self.bias += random.gauss()
     
     def _mutate_activation_function(self) -> None:
-        self.activation = Activations.get_random_activation_function()
+        self.activation = Activations.get_random()
 
     def _mutate_aggregation_function(self) -> None:
-        self.aggregation = Aggregations.get_random_aggregation_function
+        self.aggregation = Aggregations.get_random
 
     def _mutate_response_function(self) -> None:
-        self.response = Activations.get_random_activation_function()
+        self.response = Activations.get_random()
 
     def copy(self) -> NodeGene:
         return NodeGene(self.bias, self.activation, self.aggregation, self.response)

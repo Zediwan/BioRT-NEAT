@@ -111,7 +111,7 @@ class Activations(Enum):
     SOFTPLUS = softplus_activation
 
     @staticmethod
-    def get_random_activation_function():
+    def get_random():
         return random.choice([
             Activations.TANH,
             Activations.SIGMOID,
