@@ -1,3 +1,5 @@
+from __future__ import annotations
+import random
 from ..extended_enum import ExtendedEnum
 from functools import reduce
 from operator import mul
@@ -37,3 +39,7 @@ class Aggregations(ExtendedEnum):
     MAX_ABS = maxabs_aggregation
     MEDIAN = median_aggregation
     MEAN = mean_aggregation
+
+    @staticmethod
+    def get_random_aggregation_function() -> Aggregations:
+        return random.choice(Aggregations.get_options())
