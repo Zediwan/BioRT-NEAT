@@ -2,12 +2,24 @@ from __future__ import annotations
 
 from .extended_enum import ExtendedEnum
 import random
-import math
+from neat.activations import *
 
 
 class ActivationFunction(ExtendedEnum):
-    THRESHOLD = lambda x: 1 if x > 0 else 0
-    SIGMOID = lambda x: 1 / (1 + math.exp(-x))
+    TANH = tanh_activation
+    SIGMOID = sigmoid_activation
+    SIN = sin_activation
+    GAUSS = gauss_activation
+    RELU = relu_activation
+    EXP = exp_activation
+    HAT = hat_activation
+    INV = inv_activation
+    LOG = log_activation
+    CUBE = cube_activation
+    SQUARE = square_activation
+    CLAMPED = clamped_activation
+    ID = identity_activation
+    SOFTPLUS = softplus_activation
 
     @staticmethod
     def get_random_activation_function() -> ActivationFunction:
