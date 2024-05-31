@@ -4,7 +4,7 @@ import random
 from itertools import count
 
 
-class NeatNetwork:
+class Genome:
     CONNECTION_ADD_PROB: float
     CONNECTION_DEL_PROP: float
     NODE_ADD_PROB: float
@@ -22,9 +22,9 @@ class NeatNetwork:
     def __init__(self, nodes: dict[str, NodeGene] = None, connections: dict[str, ConnectionGene] = None) -> None:
         if not nodes:
             nodes = {}
-            for key in NeatNetwork.INPUT_KEYS:
+            for key in Genome.INPUT_KEYS:
                 nodes[key] = NodeGene(self.get_new_node_key(nodes))
-            for key in NeatNetwork.OUTPUT_KEYS:
+            for key in Genome.OUTPUT_KEYS:
                 nodes[key] = NodeGene(self.get_new_node_key(nodes))
         self.nodes = nodes
 
@@ -32,12 +32,23 @@ class NeatNetwork:
             connections = {}
         self.connections = connections
 
-    def feedforward(self) -> list:
-        outputs = []
+    def activate(self, inputs):
+        if len(self.input_nodes) != len(inputs):
+            raise RuntimeError("Expected {0:n} inputs, got {1:n}".format(len(self.input_nodes), len(inputs)))
 
-        return outputs
+        for k, v in zip(self.input_nodes, inputs):
+            self.values[k] = v
 
-    def distance(self, other: NeatNetwork) -> float:
+        for node, act_func, agg_func, bias, response, links in self.node_evals:
+            node_inputs = []
+            for i, w in links:
+                node_inputs.append(self.values[i] * w)
+            s = agg_func(node_inputs)
+            self.values[node] = act_func(bias + response * s)
+
+        return [self.values[i] for i in self.output_nodes]
+
+    def distance(self, other: Genome) -> float:
         """
         Returns the genetic distance between this genome and the other. This distance value
         is used to compute genome compatibility for speciation.
@@ -61,7 +72,7 @@ class NeatNetwork:
 
             max_nodes = max(len(self.nodes), len(other.nodes))
             node_distance += (node_distance +
-                             (NeatNetwork.compatibility_disjoint_coefficient *
+                             (Genome.compatibility_disjoint_coefficient *
                               disjoint_nodes)) / max_nodes
 
         # Compute connection gene differences.
@@ -82,7 +93,7 @@ class NeatNetwork:
 
             max_conn = max(len(self.connections), len(other.connections))
             connection_distance = (connection_distance +
-                                   (NeatNetwork.compatibility_disjoint_coefficient *
+                                   (Genome.compatibility_disjoint_coefficient *
                                     disjoint_connections)) / max_conn
 
         distance = node_distance + connection_distance
@@ -97,13 +108,13 @@ class NeatNetwork:
         return len(self.nodes), num_enabled_connections
 
     def mutate(self) -> None:
-        if random.random() < NeatNetwork.CONNECTION_ADD_PROB:
+        if random.random() < Genome.CONNECTION_ADD_PROB:
             self.mutate_add_connection()
-        if random.random() < NeatNetwork.CONNECTION_DEL_PROP:
+        if random.random() < Genome.CONNECTION_DEL_PROP:
             self.mutate_delete_connection()
-        if random.random() < NeatNetwork.NODE_ADD_PROB:
+        if random.random() < Genome.NODE_ADD_PROB:
             self.mutate_add_node()
-        if random.random() < NeatNetwork.NODE_DEL_PROB:
+        if random.random() < Genome.NODE_DEL_PROB:
             self.mutate_delete_node()
         for cg in self.connections.values():
             cg.mutate()
@@ -116,7 +127,7 @@ class NeatNetwork:
         possible_outputs = list(self.nodes.values())
         to_node = self.nodes[random.choice(possible_outputs)]
 
-        possible_inputs = possible_outputs + NeatNetwork.INPUT_KEYS
+        possible_inputs = possible_outputs + Genome.INPUT_KEYS
         from_node = self.nodes[random.choice(possible_inputs)]
 
         self._add_connection(from_node, to_node)
@@ -129,7 +140,7 @@ class NeatNetwork:
         self._add_node(connection)
 
     def mutate_delete_node(self) -> None:
-        avaiable_nodes = [k for k in self.nodes if k not in NeatNetwork.OUTPUT_KEYS]
+        avaiable_nodes = [k for k in self.nodes if k not in Genome.OUTPUT_KEYS]
         if not avaiable_nodes:
             return
 
@@ -151,7 +162,7 @@ class NeatNetwork:
 
     def _add_connection(self, _from: NodeGene, _to: NodeGene, weight: float = None, enabled: bool = True) -> None:
         # Check that connection does not exist already
-        if _from.key in NeatNetwork.OUTPUT_KEYS and _to.key in NeatNetwork.OUTPUT_KEYS:
+        if _from.key in Genome.OUTPUT_KEYS and _to.key in Genome.OUTPUT_KEYS:
             return
 
         key = (_from.key, _to.key)
@@ -190,7 +201,7 @@ class NeatNetwork:
         return new_id
 
     @classmethod
-    def crossover(cls, nn1: NeatNetwork, nn2: NeatNetwork) -> NeatNetwork:
+    def crossover(cls, nn1: Genome, nn2: Genome) -> Genome:
         # Inherit connection genes
         connections = {}
         all_keys = set(nn1.connections.keys()) | set(nn2.connections.keys())
@@ -227,4 +238,4 @@ class NeatNetwork:
                 # Homologous gene: combine genes from both parents.
                 nodes[key] = NodeGene.crossover(ng1, ng2)
 
-        return NeatNetwork(nodes, connections)
+        return Genome(nodes, connections)
