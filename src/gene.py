@@ -12,6 +12,8 @@ class Gene(ABC):
     compatibility_weight_coefficient = 1
 
     def __init__(self, key) -> None:
+        if key is None:
+            raise TypeError(f"{key} is {None}.")
         self.key = key
     
     @abstractmethod
@@ -48,17 +50,24 @@ class NodeGene(Gene):
     AGGREGATION_FUNCTION_MUTATION_CHANCE = 0
     RESPONSE_FUNCTION_MUTATION_CHANCE = 0
 
-    def __init__(self, key: str, bias: float = 1, af: Activations = None, aggregation = None, response: Activations = None) -> None:
+    def __init__(self, key: str, bias: float = 1, af: Activations = None, aggregation = None, response: float = 1) -> None:
         super().__init__(key)
-        self.bias = bias
+        if not isinstance(bias, (float, int)):
+            raise TypeError(f"{bias} must be of type float.")
         if af is None:
             af = Activations.get_random()
-        self.activation = af
+        elif not callable(af):
+            raise TypeError(f"{af} is not an callable function.")
         if aggregation is None:
             aggregation = Aggregations.get_random()
+        elif not callable(aggregation):
+            raise TypeError(f"{aggregation} is not a callable function.")
+        if not isinstance(response, (float, int)):
+            raise TypeError(f"{response} must be of type float.")
+
+        self.bias = bias
+        self.activation = af
         self.aggregation = aggregation
-        if response is None:
-            response = Activations.get_random()
         self.response = response
     
     def mutate(self) -> None:
@@ -68,9 +77,9 @@ class NodeGene(Gene):
         if random.random() <= NodeGene.ACTIVATION_FUNCTION_MUTATION_CHANCE:
             self._mutate_activation_function()
         if random.random() <= NodeGene.AGGREGATION_FUNCTION_MUTATION_CHANCE:
-            self._mutate_activation_function()
+            self._mutate_aggregation_function()
         if random.random() <= NodeGene.RESPONSE_FUNCTION_MUTATION_CHANCE:
-            self._mutate_activation_function()
+            self._mutate_response_function()
     
     def _mutate_bias(self) -> None:
         self.bias += random.gauss()
@@ -82,10 +91,10 @@ class NodeGene(Gene):
         self.aggregation = Aggregations.get_random
 
     def _mutate_response_function(self) -> None:
-        self.response = Activations.get_random()
+        self.response += random.gauss()
 
     def copy(self) -> NodeGene:
-        return NodeGene(self.bias, self.activation, self.aggregation, self.response)
+        return NodeGene(self.key, self.bias, self.activation, self.aggregation, self.response)
 
     def equals(self, gene: Gene) -> bool:
         raise NotImplementedError()
@@ -105,12 +114,12 @@ class NodeGene(Gene):
 
         # Note: we use "a if random() > 0.5 else b" instead of choice((a, b))
         # here because `choice` is substantially slower.
-        bias = g1.bias if random.random > 0.5 else g2.bias
-        activation = g1.activation if random.random > 0.5 else g2.activation
-        aggregation = g1.aggregation if random.random > 0.5 else g2.aggregation
-        response = g1.response if random.random > 0.5 else g2.response
+        bias = g1.bias if random.random() > 0.5 else g2.bias
+        activation = g1.activation if random.random() > 0.5 else g2.activation
+        aggregation = g1.aggregation if random.random() > 0.5 else g2.aggregation
+        response = g1.response if random.random() > 0.5 else g2.response
 
-        return NodeGene(bias, activation, aggregation, response)
+        return NodeGene(g1.key, bias, activation, aggregation, response)
         
 class ConnectionGene(Gene):
     WEIGHT_MUTATION_CHANCE = 0
