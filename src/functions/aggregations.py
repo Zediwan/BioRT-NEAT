@@ -1,38 +1,38 @@
 from __future__ import annotations
+
+from enum import Enum
 import random
 from functools import reduce
 from operator import mul
 from neat.math_util import mean, median2
 
-class Aggregations():
-    #region functions
-    def product_aggregation(x: list[float]) -> float:  # note: `x` is a list or other iterable
+def product_aggregation(x: list[float]) -> float:  # note: `x` is a list or other iterable
         return reduce(mul, x, 1.0)
 
-    def sum_aggregation(x: list[float]) -> float:
-        return sum(x)
+def sum_aggregation(x: list[float]) -> float:
+    return sum(x)
 
 
-    def max_aggregation(x: list[float]) -> float:
-        return max(x)
+def max_aggregation(x: list[float]) -> float:
+    return max(x)
 
 
-    def min_aggregation(x: list[float]) -> float:
-        return min(x)
+def min_aggregation(x: list[float]) -> float:
+    return min(x)
 
 
-    def maxabs_aggregation(x: list[float]) -> float:
-        return max(x, key=abs)
+def maxabs_aggregation(x: list[float]) -> float:
+    return max(x, key=abs)
 
 
-    def median_aggregation(x: list[float]) -> float:
-        return median2(x)
+def median_aggregation(x: list[float]) -> float:
+    return median2(x)
 
 
-    def mean_aggregation(x: list[float]) -> float:
-        return mean(x)
-    #endregion
+def mean_aggregation(x: list[float]) -> float:
+    return mean(x)
 
+class Aggregations(Enum):
     PRODUCT = product_aggregation
     SUM = sum_aggregation
     MAX = max_aggregation
@@ -41,19 +41,21 @@ class Aggregations():
     MEDIAN = median_aggregation
     MEAN = mean_aggregation
 
-    aggregations = {
-        MAX,
-        MAX_ABS,
-        MEAN,
-        MEDIAN,
-        MIN,
-        PRODUCT,
-        MIN
-    }
+    @staticmethod
+    def get_options() -> list[Aggregations]:
+        return [
+            Aggregations.MAX,
+            Aggregations.MAX_ABS,
+            Aggregations.MEAN,
+            Aggregations.MEDIAN,
+            Aggregations.MIN,
+            Aggregations.PRODUCT,
+            Aggregations.MIN
+        ]
 
     @staticmethod
     def is_valid_aggregation(aggregation: Aggregations) -> bool:
-        return aggregation in Aggregations.aggregations
+        return aggregation in Aggregations.get_options()
 
     @staticmethod
     def assert_aggregation(aggregation: Aggregations) -> None:
@@ -63,4 +65,4 @@ class Aggregations():
 
     @staticmethod
     def get_random() -> Aggregations:
-        return random.choice(Aggregations.aggregations)
+        return random.choice(Aggregations.get_options())
