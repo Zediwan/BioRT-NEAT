@@ -1,8 +1,8 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 import random
-from .functions.activations import Activations
-from .functions.aggregations import Aggregations
+from .functions.activation import Activation
+from .functions.aggregation import Aggregation
 
 class Gene(ABC):
     # The coefficient for each weight, bias, or response multiplier difference’s contribution to
@@ -50,16 +50,16 @@ class NodeGene(Gene):
     AGGREGATION_FUNCTION_MUTATION_CHANCE = 0
     RESPONSE_FUNCTION_MUTATION_CHANCE = 0
 
-    def __init__(self, key: str, bias: float = 1, af: Activations = None, aggregation = None, response: float = 1) -> None:
+    def __init__(self, key: str, bias: float = 1, af: Activation = None, aggregation = None, response: float = 1) -> None:
         super().__init__(key)
         if not isinstance(bias, (float, int)):
             raise TypeError(f"{bias} must be of type float.")
         if af is None:
-            af = Activations.get_random()
+            af = Activation.get_random()
         elif not callable(af):
             raise TypeError(f"{af} is not an callable function.")
         if aggregation is None:
-            aggregation = Aggregations.get_random()
+            aggregation = Aggregation.get_random()
         elif not callable(aggregation):
             raise TypeError(f"{aggregation} is not a callable function.")
         if not isinstance(response, (float, int)):
@@ -85,10 +85,10 @@ class NodeGene(Gene):
         self.bias += random.gauss()
     
     def _mutate_activation_function(self) -> None:
-        self.activation = Activations.get_random()
+        self.activation = Activation.get_random()
 
     def _mutate_aggregation_function(self) -> None:
-        self.aggregation = Aggregations.get_random
+        self.aggregation = Aggregation.get_random
 
     def _mutate_response_function(self) -> None:
         self.response += random.gauss()
