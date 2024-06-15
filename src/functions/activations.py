@@ -131,7 +131,7 @@ class Activations(Enum):
 
     @staticmethod
     def is_valid_activation(activation: Activations) -> bool:
-        return activation in Activations.get_options()
+        return (activation in Activations.get_options()) or callable(activation)
 
     @staticmethod
     def assert_activation(activation: Activations) -> None:

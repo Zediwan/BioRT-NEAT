@@ -55,7 +55,7 @@ class Aggregations(Enum):
 
     @staticmethod
     def is_valid_aggregation(aggregation: Aggregations) -> bool:
-        return aggregation in Aggregations.get_options()
+        return aggregation in Aggregations.get_options() or callable(aggregation)
 
     @staticmethod
     def assert_aggregation(aggregation: Aggregations) -> None:
