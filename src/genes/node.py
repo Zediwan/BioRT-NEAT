@@ -27,8 +27,18 @@ class Node(Gene):
         self.bias = bias
         self.response = response
     
-    def get_value(self, inputs: list[float]) -> float:
-        return self.activation(self.bias + (self.response * self.aggregation(inputs)))
+        self.num_in_connections: int = 0
+        from .connection import Connection
+        self.out_connections: list[Connection] = []
+        self._values: list[float] = []
+
+    def recieve_value(self, value: float):
+        if not isinstance(value, (float, int)):
+            raise TypeError(f"Value needs to be of type float or int: {value}, {type(value)}.")
+        self._values.append(value)
+
+    def get_value(self) -> float:
+        return self.activation(self.bias + (self.response * self.aggregation(self._values)))
     
     def mutate(self) -> None:
         if random.random() <= conf.mut.new_af_proba:
