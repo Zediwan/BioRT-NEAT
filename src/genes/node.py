@@ -38,7 +38,7 @@ class Node(Gene):
         if random.random() <= conf.mut.new_bias_proba:
             self._mutate_bias()
         if random.random() <= conf.mut.new_response_proba:
-            self._mutate_response_function()
+            self._mutate_response()
 
     def _mutate_activation_function(self) -> None:
         self.activation = Activation.get_random(self.activation)
@@ -49,14 +49,19 @@ class Node(Gene):
     def _mutate_bias(self) -> None:
         self.bias += random.gauss(sigma=conf.mut.bias_sigma)
 
-    def _mutate_response_function(self) -> None:
+    def _mutate_response(self) -> None:
         self.response += random.gauss(sigma=conf.mut.response_sigma)
 
     def copy(self) -> Node:
         return Node(af=self.activation, agg=self.aggregation, bias=self.bias, response=self.response)
 
-    def equals(self, gene: Gene) -> bool:
-        raise NotImplementedError()
+    def equals(self, node: Node) -> bool:
+        return (
+            (self.activation == node.activation) and
+            (self.aggregation == node.aggregation) and
+            (self.bias == node.bias) and
+            (self.response == node.bias)
+        )
 
     @staticmethod
     def crossover(g1: Node, g2: Node) -> Node:

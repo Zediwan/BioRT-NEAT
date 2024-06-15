@@ -142,5 +142,8 @@ class Activation(Enum):
     def get_random(old_af: Activation = None) -> Activation:
         options = Activation.get_options().copy()
         if Activation.is_valid_activation(old_af):
-            options.remove(old_af)
+            try:
+                options.remove(old_af)
+            except ValueError:
+                pass
         return random.choice(options)

@@ -67,5 +67,8 @@ class Aggregation(Enum):
     def get_random(old_agg: Aggregation = None) -> Aggregation:
         options = Aggregation.get_options().copy()
         if Aggregation.is_valid_aggregation(old_agg):
-            options.remove(old_agg)
+            try:
+                options.remove(old_agg)
+            except ValueError:
+                pass
         return random.choice(options)

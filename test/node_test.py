@@ -198,22 +198,72 @@ class TestMutate(TestNode):
         self.assertNotEqual(node_pure.response, node_mutated.response)
 
 class TestMutateActivationFunction(TestNode):
-    pass
+    def test_mutate_activation_function(self):
+        node_pure = Node(self._af, self._agg, self._bias, self._response)
+        node_mutated = Node(self._af, self._agg, self._bias, self._response)
+
+        node_mutated._mutate_activation_function()
+
+        self.assertNotEqual(node_pure.activation, node_mutated.activation)
 
 class TestMutateAggregationFunction(TestNode):
-    pass
+    def test_mutate_aggregation_function(self):
+        node_pure = Node(self._af, self._agg, self._bias, self._response)
+        node_mutated = Node(self._af, self._agg, self._bias, self._response)
+
+        node_mutated._mutate_aggregation_function()
+
+        self.assertNotEqual(node_pure.aggregation, node_mutated.aggregation)
 
 class TestMutateBias(TestNode):
-    pass
+    def test_mutate_bias(self):
+        node_pure = Node(self._af, self._agg, self._bias, self._response)
+        node_mutated = Node(self._af, self._agg, self._bias, self._response)
+
+        node_mutated._mutate_bias()
+
+        self.assertNotEqual(node_pure.bias, node_mutated.bias)
 
 class TestMutateResponse(TestNode):
-    pass
+    def test_mutate_response(self):
+        node_pure = Node(self._af, self._agg, self._bias, self._response)
+        node_mutated = Node(self._af, self._agg, self._bias, self._response)
+
+        node_mutated._mutate_response()
+
+        self.assertNotEqual(node_pure.response, node_mutated.response)
 
 class TestCopy(TestNode):
-    pass
+    def test_copy(self):
+        node = Node(self._af, self._agg, self._bias, self._response)
+        node_copy = node.copy()
+
+        self.assertEqual(node.activation, node_copy.activation)
+        self.assertEqual(node.aggregation, node_copy.aggregation)
+        self.assertEqual(node.bias, node_copy.bias)
+        self.assertEqual(node.response, node_copy.response)
 
 class TestEquals(TestNode):
-    pass
+    def test_equals_true(self):
+        node1 = Node(self._af, self._agg, self._bias, self._response)
+        node2 = Node(self._af, self._agg, self._bias, self._response)
+
+        self.assertTrue(node1.equals(node2))
+
+    def test_equals_false(self):
+        node1 = Node(self._af, self._agg, self._bias, self._response)
+        node2 = Node(self._af, self._agg, self._bias + 1, self._response)
+
+        self.assertFalse(node1.equals(node2))
 
 class TestCrossover(TestNode):
-    pass
+    def test_crossover(self):
+        node1 = Node(self._af, self._agg, self._bias, self._response)
+        node2 = Node(Activation.get_random(self._af), Aggregation.get_random(self._agg), self._bias + 1, self._response + 1)
+
+        child_node = Node.crossover(node1, node2)
+
+        self.assertIn(child_node.activation, (node1.activation, node2.activation))
+        self.assertIn(child_node.aggregation, (node1.aggregation, node2.aggregation))
+        self.assertIn(child_node.bias, (node1.bias, node2.bias))
+        self.assertIn(child_node.response, (node1.response, node2.response))
