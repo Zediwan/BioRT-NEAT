@@ -41,14 +41,26 @@ class Aggregations():
     MEDIAN = median_aggregation
     MEAN = mean_aggregation
 
+    aggregations = {
+        MAX,
+        MAX_ABS,
+        MEAN,
+        MEDIAN,
+        MIN,
+        PRODUCT,
+        MIN
+    }
+
+    @staticmethod
+    def is_valid_aggregation(aggregation: Aggregations) -> bool:
+        return aggregation in Aggregations.aggregations
+
+    @staticmethod
+    def assert_aggregation(aggregation: Aggregations) -> None:
+        if not Aggregations.is_valid_aggregation(aggregation):
+            raise ValueError(f"Provided function is not a valid aggregation function: {aggregation}.")
+
+
     @staticmethod
     def get_random() -> Aggregations:
-        return random.choice([
-            Aggregations.MAX,
-            Aggregations.MAX_ABS,
-            Aggregations.MEAN,
-            Aggregations.MEDIAN,
-            Aggregations.MIN,
-            Aggregations.PRODUCT,
-            Aggregations.MIN
-            ])
+        return random.choice(Aggregations.aggregations)

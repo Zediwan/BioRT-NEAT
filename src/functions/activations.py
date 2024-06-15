@@ -6,7 +6,6 @@ import math
 
 
 class Activations(Enum):
-    #region functions
     def sigmoid_activation(z: float) -> float:
         z = max(-60.0, min(60.0, 5.0 * z))
         return 1.0 / (1.0 + math.exp(-z))
@@ -90,7 +89,6 @@ class Activations(Enum):
 
     def cube_activation(z: float) -> float:
         return z ** 3
-    #endregion
 
     TANH = tanh_activation
     SIGMOID = sigmoid_activation
@@ -110,24 +108,62 @@ class Activations(Enum):
     ID = identity_activation
     SOFTPLUS = softplus_activation
 
+    activations = {
+        TANH,
+        SIGMOID,
+        SIN,
+        GAUSS,
+        RELU,
+        ELU,
+        SELU,
+        LELU,
+        EXP,
+        HAT,
+        INV,
+        LOG,
+        CUBE,
+        SQUARE,
+        CLAMPED,
+        ID,
+        SOFTPLUS
+    }
+
+    @staticmethod
+    def is_valid_activation(activation: Activations) -> bool:
+        """
+        Check if the given activation function is valid.
+
+        Parameters:
+        - activation (Activations): The activation function to be checked.
+
+        Returns:
+        - bool: True if the activation function is valid, False otherwise.
+        """
+        return activation in Activations.activations
+
+    @staticmethod
+    def assert_activation(activation: Activations) -> None:
+        """
+        Check if the provided activation function is valid.
+
+        Parameters:
+        - activation (Activations): The activation function to be checked.
+
+        Raises:
+        - ValueError: If the provided activation function is not valid.
+
+        Returns:
+        - None
+        """
+        if not Activations.is_valid_activation(activation):
+            raise ValueError(f"Provided function is not a valid activation function: {activation}.")
+
     @staticmethod
     def get_random() -> Activations:
-        return random.choice([
-            Activations.TANH,
-            Activations.SIGMOID,
-            Activations.SIN,
-            Activations.GAUSS,
-            Activations.RELU,
-            Activations.ELU,
-            Activations.SELU,
-            Activations.LELU,
-            Activations.EXP,
-            Activations.HAT,
-            Activations.INV,
-            Activations.LOG,
-            Activations.CUBE,
-            Activations.SQUARE,
-            Activations.CLAMPED,
-            Activations.ID,
-            Activations.SOFTPLUS
-            ])
+        """
+        Return a random activation function from the list of available activation functions.
+
+        Returns:
+            Activations: A randomly selected activation function from the list of available activation functions.
+        """
+        return random.choice(Activations.activations)
