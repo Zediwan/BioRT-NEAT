@@ -1,1 +1,1 @@
-__all__ = ["config", "gene", "genome"]
+__all__ = ["config", "gene", "genome", "network"]
