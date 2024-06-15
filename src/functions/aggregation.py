@@ -32,7 +32,7 @@ def median_aggregation(x: list[float]) -> float:
 def mean_aggregation(x: list[float]) -> float:
     return mean(x)
 
-class Aggregations(Enum):
+class Aggregation(Enum):
     PRODUCT = product_aggregation
     SUM = sum_aggregation
     MAX = max_aggregation
@@ -42,27 +42,30 @@ class Aggregations(Enum):
     MEAN = mean_aggregation
 
     @staticmethod
-    def get_options() -> list[Aggregations]:
+    def get_options() -> list[Aggregation]:
         return [
-            Aggregations.MAX,
-            Aggregations.MAX_ABS,
-            Aggregations.MEAN,
-            Aggregations.MEDIAN,
-            Aggregations.MIN,
-            Aggregations.PRODUCT,
-            Aggregations.MIN
+            Aggregation.MAX,
+            Aggregation.MAX_ABS,
+            Aggregation.MEAN,
+            Aggregation.MEDIAN,
+            Aggregation.MIN,
+            Aggregation.PRODUCT,
+            Aggregation.MIN
         ]
 
     @staticmethod
-    def is_valid_aggregation(aggregation: Aggregations) -> bool:
-        return aggregation in Aggregations.get_options() or callable(aggregation)
+    def is_valid_aggregation(aggregation: Aggregation) -> bool:
+        return aggregation in Aggregation.get_options() or callable(aggregation)
 
     @staticmethod
-    def assert_aggregation(aggregation: Aggregations) -> None:
-        if not Aggregations.is_valid_aggregation(aggregation):
+    def assert_aggregation(aggregation: Aggregation) -> None:
+        if not Aggregation.is_valid_aggregation(aggregation):
             raise ValueError(f"Provided function is not a valid aggregation function: {aggregation}.")
 
 
     @staticmethod
-    def get_random() -> Aggregations:
-        return random.choice(Aggregations.get_options())
+    def get_random(old_agg: Aggregation = None) -> Aggregation:
+        options = Aggregation.get_options().copy()
+        if Aggregation.is_valid_aggregation(old_agg):
+            options.remove(old_agg)
+        return random.choice(options)

@@ -88,7 +88,7 @@ def square_activation(z: float) -> float:
 def cube_activation(z: float) -> float:
     return z ** 3
 
-class Activations(Enum):
+class Activation(Enum):
     TANH = tanh_activation
     SIGMOID = sigmoid_activation
     SIN = sin_activation
@@ -108,36 +108,39 @@ class Activations(Enum):
     SOFTPLUS = softplus_activation
 
     @staticmethod
-    def get_options() -> list[Activations]:
+    def get_options() -> list[Activation]:
         return [
-            Activations.TANH,
-            Activations.SIGMOID,
-            Activations.SIN,
-            Activations.GAUSS,
-            Activations.RELU,
-            Activations.ELU,
-            Activations.SELU,
-            Activations.LELU,
-            Activations.EXP,
-            Activations.HAT,
-            Activations.INV,
-            Activations.LOG,
-            Activations.CUBE,
-            Activations.SQUARE,
-            Activations.CLAMPED,
-            Activations.ID,
-            Activations.SOFTPLUS
+            Activation.TANH,
+            Activation.SIGMOID,
+            Activation.SIN,
+            Activation.GAUSS,
+            Activation.RELU,
+            Activation.ELU,
+            Activation.SELU,
+            Activation.LELU,
+            Activation.EXP,
+            Activation.HAT,
+            Activation.INV,
+            Activation.LOG,
+            Activation.CUBE,
+            Activation.SQUARE,
+            Activation.CLAMPED,
+            Activation.ID,
+            Activation.SOFTPLUS
         ]
 
     @staticmethod
-    def is_valid_activation(activation: Activations) -> bool:
-        return (activation in Activations.get_options()) or callable(activation)
+    def is_valid_activation(activation: Activation) -> bool:
+        return (activation in Activation.get_options()) or callable(activation)
 
     @staticmethod
-    def assert_activation(activation: Activations) -> None:
-        if not Activations.is_valid_activation(activation):
+    def assert_activation(activation: Activation) -> None:
+        if not Activation.is_valid_activation(activation):
             raise ValueError(f"Provided function is not a valid activation function: {activation}.")
 
     @staticmethod
-    def get_random() -> Activations:
-        return random.choice(Activations.get_options())
+    def get_random(old_af: Activation = None) -> Activation:
+        options = Activation.get_options().copy()
+        if Activation.is_valid_activation(old_af):
+            options.remove(old_af)
+        return random.choice(options)
