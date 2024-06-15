@@ -1,1 +1,1 @@
-__all__ = ["extended_enum", "gene", "genome"]
+__all__ = ["config", "gene", "genome"]
