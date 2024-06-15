@@ -6,30 +6,30 @@ from neat.math_util import mean, median2
 
 class Aggregations():
     #region functions
-    def product_aggregation(x):  # note: `x` is a list or other iterable
+    def product_aggregation(x: list[float]) -> float:  # note: `x` is a list or other iterable
         return reduce(mul, x, 1.0)
 
-    def sum_aggregation(x):
+    def sum_aggregation(x: list[float]) -> float:
         return sum(x)
 
 
-    def max_aggregation(x):
+    def max_aggregation(x: list[float]) -> float:
         return max(x)
 
 
-    def min_aggregation(x):
+    def min_aggregation(x: list[float]) -> float:
         return min(x)
 
 
-    def maxabs_aggregation(x):
+    def maxabs_aggregation(x: list[float]) -> float:
         return max(x, key=abs)
 
 
-    def median_aggregation(x):
+    def median_aggregation(x: list[float]) -> float:
         return median2(x)
 
 
-    def mean_aggregation(x):
+    def mean_aggregation(x: list[float]) -> float:
         return mean(x)
     #endregion
 

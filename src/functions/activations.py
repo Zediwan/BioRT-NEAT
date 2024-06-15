@@ -7,58 +7,58 @@ import math
 
 class Activations(Enum):
     #region functions
-    def sigmoid_activation(z):
+    def sigmoid_activation(z: float) -> float:
         z = max(-60.0, min(60.0, 5.0 * z))
         return 1.0 / (1.0 + math.exp(-z))
 
-    def tanh_activation(z):
+    def tanh_activation(z: float) -> float:
         z = max(-60.0, min(60.0, 2.5 * z))
         return math.tanh(z)
 
 
-    def sin_activation(z):
+    def sin_activation(z: float) -> float:
         z = max(-60.0, min(60.0, 5.0 * z))
         return math.sin(z)
 
 
-    def gauss_activation(z):
+    def gauss_activation(z: float) -> float:
         z = max(-3.4, min(3.4, z))
         return math.exp(-5.0 * z ** 2)
 
 
-    def relu_activation(z):
+    def relu_activation(z: float) -> float:
         return z if z > 0.0 else 0.0
 
 
-    def elu_activation(z):
+    def elu_activation(z: float) -> float:
         return z if z > 0.0 else math.exp(z) - 1
 
 
-    def lelu_activation(z):
+    def lelu_activation(z: float) -> float:
         leaky = 0.005
         return z if z > 0.0 else leaky * z
 
 
-    def selu_activation(z):
+    def selu_activation(z: float) -> float:
         lam = 1.0507009873554804934193349852946
         alpha = 1.6732632423543772848170429916717
         return lam * z if z > 0.0 else lam * alpha * (math.exp(z) - 1)
 
 
-    def softplus_activation(z):
+    def softplus_activation(z: float) -> float:
         z = max(-60.0, min(60.0, 5.0 * z))
         return 0.2 * math.log(1 + math.exp(z))
 
 
-    def identity_activation(z):
+    def identity_activation(z: float) -> float:
         return z
 
 
-    def clamped_activation(z):
+    def clamped_activation(z: float) -> float:
         return max(-1.0, min(1.0, z))
 
 
-    def inv_activation(z):
+    def inv_activation(z: float) -> float:
         try:
             z = 1.0 / z
         except ArithmeticError:  # handle overflows
@@ -66,29 +66,29 @@ class Activations(Enum):
         else:
             return z
 
-    def log_activation(z):
+    def log_activation(z: float) -> float:
         z = max(1e-7, z)
         return math.log(z)
 
 
-    def exp_activation(z):
+    def exp_activation(z: float) -> float:
         z = max(-60.0, min(60.0, z))
         return math.exp(z)
 
 
-    def abs_activation(z):
+    def abs_activation(z: float) -> float:
         return abs(z)
 
 
-    def hat_activation(z):
+    def hat_activation(z: float) -> float:
         return max(0.0, 1 - abs(z))
 
 
-    def square_activation(z):
+    def square_activation(z: float) -> float:
         return z ** 2
 
 
-    def cube_activation(z):
+    def cube_activation(z: float) -> float:
         return z ** 3
     #endregion
 
@@ -111,7 +111,7 @@ class Activations(Enum):
     SOFTPLUS = softplus_activation
 
     @staticmethod
-    def get_random():
+    def get_random() -> Activations:
         return random.choice([
             Activations.TANH,
             Activations.SIGMOID,
