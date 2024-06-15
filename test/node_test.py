@@ -48,7 +48,7 @@ class TestInit(TestNode):
 
 class TestGetValueSingle(TestNode):
     def test_get_value_valid_single_input_zero(self):
-        node = Node(af=Activation.ID, agg=Aggregation.MAX, bias=0, response=0)
+        node = Node(af=Activation.ID, agg=Aggregation.get_random(), bias=0, response=0)
         inputs = [1]
         result = node.get_value(inputs)
 
@@ -57,7 +57,7 @@ class TestGetValueSingle(TestNode):
         self.assertEqual(result, 0)
     
     def test_get_value_valid_single_input_no_change(self):
-        node = Node(af=Activation.ID, agg=Aggregation.MAX, bias=0, response=1)
+        node = Node(af=Activation.ID, agg=Aggregation.get_random(), bias=0, response=1)
         inputs = [1]
         result = node.get_value(inputs)
 
@@ -66,7 +66,7 @@ class TestGetValueSingle(TestNode):
         self.assertEqual(result, inputs[0])
     
     def test_get_value_valid_single_input_bias(self):
-        node = Node(af=Activation.ID, agg=Aggregation.MAX, bias=1, response=1)
+        node = Node(af=Activation.ID, agg=Aggregation.get_random(), bias=1, response=1)
         inputs = [1]
         result = node.get_value(inputs)
 
@@ -75,7 +75,7 @@ class TestGetValueSingle(TestNode):
         self.assertEqual(result, inputs[0] + 1)
     
     def test_get_value_valid_single_input_response(self):
-        node = Node(af=Activation.ID, agg=Aggregation.MAX, bias=0, response=2)
+        node = Node(af=Activation.ID, agg=Aggregation.get_random(), bias=0, response=2)
         inputs = [1]
         result = node.get_value(inputs)
 
@@ -84,7 +84,7 @@ class TestGetValueSingle(TestNode):
         self.assertEqual(result, inputs[0] * 2)
     
     def test_get_value_valid_single_input_response_and_bias(self):
-        node = Node(af=Activation.ID, agg=Aggregation.MAX, bias=1, response=2)
+        node = Node(af=Activation.ID, agg=Aggregation.get_random(), bias=1, response=2)
         inputs = [1]
         result = node.get_value(inputs)
 
@@ -93,7 +93,59 @@ class TestGetValueSingle(TestNode):
         self.assertEqual(result, inputs[0] * 2 + 1)
         
     def test_get_value_invalid_single_input(self):
-        node = Node(af=Activation.ID, agg=Aggregation.MAX, bias=0, response=0)
+        node = Node(af=Activation.ID, agg=Aggregation.get_random(), bias=0, response=0)
         inputs = ["invalid input"]
         
-        self.assertRaises(TypeError, node.get_value, inputs)
+        self.assertRaises((ValueError, TypeError), node.get_value, inputs)
+
+class TestGetValueMultiple(TestNode):
+    def test_get_value_valid_multiple_inputs_zero(self):
+        node = Node(af=Activation.ID, agg=Aggregation.MEAN, bias=0, response=0)
+        inputs = [1, 2]
+        result = node.get_value(inputs)
+
+        self.assertIsNotNone(result)
+        self.assertIsInstance(result, (float, int))
+        self.assertEqual(result, 0)
+
+    def test_get_value_valid_multiple_inputs_no_change(self):
+        node = Node(af=Activation.ID, agg=Aggregation.MEAN, bias=0, response=1)
+        inputs = [1, 2]
+        result = node.get_value(inputs)
+
+        self.assertIsNotNone(result)
+        self.assertIsInstance(result, (float, int))
+        self.assertEqual(result, (inputs[0] + inputs[1])/2)
+
+    def test_get_value_valid_multiple_inputs_bias(self):
+        node = Node(af=Activation.ID, agg=Aggregation.MEAN, bias=1, response=1)
+        inputs = [1, 2]
+        result = node.get_value(inputs)
+
+        self.assertIsNotNone(result)
+        self.assertIsInstance(result, (float, int))
+        self.assertEqual(result, (inputs[0] + inputs[1])/2 + 1)
+
+    def test_get_value_valid_multiple_inputs_response(self):
+        node = Node(af=Activation.ID, agg=Aggregation.MEAN, bias=0, response=2)
+        inputs = [1, 2]
+        result = node.get_value(inputs)
+
+        self.assertIsNotNone(result)
+        self.assertIsInstance(result, (float, int))
+        self.assertEqual(result, (inputs[0] + inputs[1])/2 * 2)
+
+    def test_get_value_valid_multiple_inputs_response_and_bias(self):
+        node = Node(af=Activation.ID, agg=Aggregation.MEAN, bias=1, response=2)
+        inputs = [1, 2]
+        result = node.get_value(inputs)
+
+        self.assertIsNotNone(result)
+        self.assertIsInstance(result, (float, int))
+        self.assertEqual(result, (inputs[0] + inputs[1])/2 * 2 + 1)
+
+    def test_get_value_invalid_multiple_inputs(self):
+        node = Node(af=Activation.ID, agg=Aggregation.get_random(), bias=0, response=0)
+        inputs = ["invalid input"]
+
+        self.assertRaises((ValueError, TypeError), node.get_value, inputs)
