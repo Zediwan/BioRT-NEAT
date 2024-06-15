@@ -149,3 +149,71 @@ class TestGetValueMultiple(TestNode):
         inputs = ["invalid input"]
 
         self.assertRaises((ValueError, TypeError), node.get_value, inputs)
+
+class TestMutate(TestNode):
+    def setUp(self) -> None:
+        super().setUp()
+        self.old_new_af_proba = conf.mut.new_af_proba
+        self.old_new_agg_proba = conf.mut.new_agg_proba
+        self.old_new_bias_proba = conf.mut.new_bias_proba
+        self.old_new_response_proba = conf.mut.new_response_proba
+
+    def tearDown(self) -> None:
+        super().tearDown()
+        conf.mut.new_af_proba = self.old_new_af_proba
+        conf.mut.new_agg_proba = self.old_new_agg_proba
+        conf.mut.new_bias_proba = self.old_new_bias_proba
+        conf.mut.new_response_proba = self.old_new_response_proba
+
+    def test_mutate_zero_probas(self):
+        conf.mut.new_af_proba = 0
+        conf.mut.new_agg_proba = 0
+        conf.mut.new_bias_proba = 0
+        conf.mut.new_response_proba = 0
+
+        node_pure = Node(self._af, self._agg, self._bias, self._response)
+        node_mutated = Node(self._af, self._agg, self._bias, self._response)
+
+        node_mutated.mutate()
+
+        self.assertEqual(node_pure.activation, node_mutated.activation)
+        self.assertEqual(node_pure.aggregation, node_mutated.aggregation)
+        self.assertEqual(node_pure.bias, node_mutated.bias)
+        self.assertEqual(node_pure.response, node_mutated.response)
+
+    def test_mutate_guaranteed(self):
+        conf.mut.new_af_proba = 1
+        conf.mut.new_agg_proba = 1
+        conf.mut.new_bias_proba = 1
+        conf.mut.new_response_proba = 1
+
+        node_pure = Node(self._af, self._agg, self._bias, self._response)
+        node_mutated = Node(self._af, self._agg, self._bias, self._response)
+
+        node_mutated.mutate()
+
+        self.assertNotEqual(node_pure.activation, node_mutated.activation)
+        self.assertNotEqual(node_pure.aggregation, node_mutated.aggregation)
+        self.assertNotEqual(node_pure.bias, node_mutated.bias)
+        self.assertNotEqual(node_pure.response, node_mutated.response)
+
+class TestMutateActivationFunction(TestNode):
+    pass
+
+class TestMutateAggregationFunction(TestNode):
+    pass
+
+class TestMutateBias(TestNode):
+    pass
+
+class TestMutateResponse(TestNode):
+    pass
+
+class TestCopy(TestNode):
+    pass
+
+class TestEquals(TestNode):
+    pass
+
+class TestCrossover(TestNode):
+    pass

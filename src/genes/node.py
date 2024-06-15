@@ -39,15 +39,15 @@ class Node(Gene):
             self._mutate_bias()
         if random.random() <= conf.mut.new_response_proba:
             self._mutate_response_function()
-    
-    def _mutate_bias(self) -> None:
-        self.bias += random.gauss(sigma=conf.mut.bias_sigma)
-    
+
     def _mutate_activation_function(self) -> None:
         self.activation = Activation.get_random(self.activation)
 
     def _mutate_aggregation_function(self) -> None:
         self.aggregation = Aggregation.get_random(self.aggregation)
+
+    def _mutate_bias(self) -> None:
+        self.bias += random.gauss(sigma=conf.mut.bias_sigma)
 
     def _mutate_response_function(self) -> None:
         self.response += random.gauss(sigma=conf.mut.response_sigma)
