@@ -109,6 +109,15 @@ class Activations(Enum):
     CLAMPED = clamped_activation
     ID = identity_activation
     SOFTPLUS = softplus_activation
+    
+    @staticmethod
+    def is_valid(activation: Activations) -> bool:
+        return (activation is not None) and (callable(activation))
+    
+    @staticmethod
+    def check_valid_activation(activation: Activations) -> None:
+        if not Activations.is_valid(activation):
+            raise ValueError(f"Invalid activation function: {activation}.")
 
     @staticmethod
     def get_random() -> Activations:
