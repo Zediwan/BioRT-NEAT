@@ -26,6 +26,6 @@ class Connection(Gene):
 
         self.weight = weight
 
-    def send_value(self, value: float) -> None:
-        weighted_value = value * self.weight
+    def send_value(self) -> None:
+        weighted_value = self.from_node.get_value() * self.weight
         self.to_node.recieve_value(weighted_value)
