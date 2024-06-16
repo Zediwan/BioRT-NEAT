@@ -65,7 +65,7 @@ class Node(Gene):
     def copy(self) -> Node:
         return Node(af=self.activation, agg=self.aggregation, bias=self.bias, response=self.response)
 
-    def equals(self, node: Node) -> bool:
+    def similar(self, node: Node) -> bool:
         return (
             (self.activation == node.activation) and
             (self.aggregation == node.aggregation) and

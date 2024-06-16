@@ -12,7 +12,7 @@ class Gene(ABC):
         pass
 
     @abstractmethod
-    def equals(self, gene: Gene) -> bool:
+    def similar(self, gene: Gene) -> bool:
         pass
 
     @staticmethod

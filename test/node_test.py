@@ -250,13 +250,13 @@ class TestEquals(TestNode):
         node1 = Node(self._af, self._agg, self._bias, self._response)
         node2 = Node(self._af, self._agg, self._bias, self._response)
 
-        self.assertTrue(node1.equals(node2))
+        self.assertTrue(node1.similar(node2))
 
     def test_equals_false(self):
         node1 = Node(self._af, self._agg, self._bias, self._response)
         node2 = Node(self._af, self._agg, self._bias + 1, self._response)
 
-        self.assertFalse(node1.equals(node2))
+        self.assertFalse(node1.similar(node2))
 
 class TestCrossover(TestNode):
     def test_crossover(self):

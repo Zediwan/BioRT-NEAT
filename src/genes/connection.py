@@ -16,6 +16,8 @@ class Connection(Gene):
             raise TypeError(f"To needs to be a Node: {to_node}, {type(to_node)}.")
         if not isinstance(weight, (float, int)):
             raise TypeError(f"Weight needs to be an integer or float: {weight}, {type(weight)}.")
+        if from_node == to_node:
+            raise ValueError(f"From node {from_node} and to node {to_node} need to be different.")
 
         self.from_node = from_node
         # Append self to out connections of from node
@@ -36,7 +38,7 @@ class Connection(Gene):
     def copy(self) -> None:
         pass
 
-    def equals(self, connection: Connection) -> bool:
+    def similar(self, connection: Connection) -> bool:
         pass
 
     @staticmethod
