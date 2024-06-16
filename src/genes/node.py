@@ -74,13 +74,13 @@ class Node(Gene):
         )
 
     @staticmethod
-    def crossover(g1: Node, g2: Node) -> Node:
+    def crossover(n1: Node, n2: Node) -> Node:
         """ Creates a new gene randomly inheriting attributes from its parents."""
         # Note: we use "a if random() > 0.5 else b" instead of choice((a, b))
         # here because `choice` is substantially slower.
-        bias = g1.bias if random.random() > 0.5 else g2.bias
-        activation = g1.activation if random.random() > 0.5 else g2.activation
-        aggregation = g1.aggregation if random.random() > 0.5 else g2.aggregation
-        response = g1.response if random.random() > 0.5 else g2.response
+        bias = n1.bias if random.random() > 0.5 else n2.bias
+        activation = n1.activation if random.random() > 0.5 else n2.activation
+        aggregation = n1.aggregation if random.random() > 0.5 else n2.aggregation
+        response = n1.response if random.random() > 0.5 else n2.response
 
         return Node(af=activation, agg=aggregation, bias=bias, response=response)

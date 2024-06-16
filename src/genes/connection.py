@@ -29,3 +29,16 @@ class Connection(Gene):
     def send_value(self) -> None:
         weighted_value = self.from_node.get_value() * self.weight
         self.to_node.recieve_value(weighted_value)
+
+    def mutate(self) -> None:
+        pass
+
+    def copy(self) -> None:
+        pass
+
+    def equals(self, connection: Connection) -> bool:
+        pass
+
+    @staticmethod
+    def crossover(c1: Connection, c2: Connection) -> Connection:
+        pass
