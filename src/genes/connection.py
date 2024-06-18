@@ -19,20 +19,23 @@ class Connection(Gene):
         if from_node == to_node:
             raise ValueError(f"From node {from_node} and to node {to_node} need to be different.")
 
-        self.from_node = from_node
+        self.FROM_NODE = from_node
         # Append self to out connections of from node
-        self.from_node.out_connections.append(self)
-        self.to_node = to_node
+        self.FROM_NODE.out_connections.append(self)
+        self.TO_NODE = to_node
         # Increment num of in connections on node
-        self.to_node.num_in_connections += 1
+        self.TO_NODE.num_in_connections += 1
 
         self.weight = weight
 
     def send_value(self) -> None:
-        weighted_value = self.from_node.get_value() * self.weight
-        self.to_node.recieve_value(weighted_value)
+        weighted_value = self.FROM_NODE.get_value() * self.weight
+        self.TO_NODE.recieve_value(weighted_value)
 
     def mutate(self) -> None:
+        pass
+
+    def _mutate_weight(self) -> None:
         pass
 
     def copy(self) -> None:
