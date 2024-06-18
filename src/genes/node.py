@@ -38,6 +38,8 @@ class Node(Gene):
         self._values.append(value)
 
     def get_value(self) -> float:
+        if not self._values:
+            raise ValueError(f"Trying to get node value despite not having recieved any values: {self._values}")
         return self.activation(self.bias + (self.response * self.aggregation(self._values)))
     
     def mutate(self) -> None:

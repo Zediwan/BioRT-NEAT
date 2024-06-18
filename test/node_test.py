@@ -55,6 +55,11 @@ class TestRecieveCalue(TestNode):
         node = Node(af=Activation.get_random(), agg=Aggregation.get_random())
         self.assertRaises(TypeError, node.recieve_value, "test")
 
+class TestGetValue(TestNode):
+    def test_get_value_without_recieved_values(self):
+        node = Node(af=Activation.ID, agg=Aggregation.get_random(), bias=0, response=0)
+        self.assertRaises(ValueError, node.get_value)
+
 class TestGetValueSingle(TestNode):
     def test_get_value_valid_single_input_zero(self):
         node = Node(af=Activation.ID, agg=Aggregation.get_random(), bias=0, response=0)
