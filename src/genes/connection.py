@@ -33,10 +33,11 @@ class Connection(Gene):
         self.TO_NODE.recieve_value(weighted_value)
 
     def mutate(self) -> None:
-        pass
+        if random.random() <= conf.mut.new_weight_proba:
+            self._mutate_weight()
 
     def _mutate_weight(self) -> None:
-        pass
+        self.weight += random.gauss(sigma=conf.mut.weight_sigma)
 
     def copy(self) -> None:
         pass

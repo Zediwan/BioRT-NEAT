@@ -55,3 +55,40 @@ class TestSendValue(TestConnection):
         connection.send_value()
 
         self.assertEqual(2, connection.TO_NODE.get_value())
+
+class TestMutate(TestConnection):
+    def setUp(self) -> None:
+        super().setUp()
+        self.old_new_weight_proba = conf.mut.new_weight_proba
+
+    def tearDown(self) -> None:
+        super().tearDown()
+        conf.mut.new_weight_proba = self.old_new_weight_proba
+
+    def test_mutate_zero_probas(self):
+        conf.mut.new_weight_proba = 0
+
+        con = Connection(self.from_node, self.to_node)
+        pre_mutate_weight = con.weight
+
+        con.mutate()
+
+        self.assertEqual(con.weight, pre_mutate_weight, f"Weight value did change despite 0% mutation chance. Before: {pre_mutate_weight} != after: {con.weight}.")
+
+    def test_mutate_guaranteed(self):
+        conf.mut.new_weight_proba = 1
+
+        con = Connection(self.from_node, self.to_node)
+        pre_mutate_weight = con.weight
+
+        con.mutate()
+
+        self.assertNotEqual(con.weight, pre_mutate_weight, f"Weight value did not change despite 100% mutation chance. Before: {pre_mutate_weight} == after: {con.weight}.")
+
+class TestMutateWeight(TestConnection):
+    def test_mutate_weight(self):
+        connection = Connection(self.from_node, self.to_node)
+        pre_mut_weight = connection.weight
+        connection._mutate_weight()
+
+        self.assertNotEqual(connection.weight, pre_mut_weight, f"Weight value did not change after mutation. Before: {pre_mut_weight} == after: {connection.weight}.")

@@ -28,15 +28,20 @@ class conf:
         elite_ratio = 0.35
 
     class mut:
+        # Structure
         new_node_proba = 0.05
         new_conn_proba = 0.8
+        # Node
         new_bias_proba = 0.2
         new_response_proba = 0.2
         new_af_proba = 0.2
         new_agg_proba = 0.2
-
         bias_sigma = 1
         response_sigma = 1
+
+        # Connection
+        new_weight_proba = 0.2
+        weight_sigma = 1
 
         weight_range = 1.0
         weight_small_range = 0.01
