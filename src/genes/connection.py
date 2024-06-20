@@ -42,13 +42,27 @@ class Connection(Gene):
     def copy(self) -> Connection:
         return Connection(self.FROM_NODE, self.TO_NODE, self.weight)
 
+    def same_connection(self, c: Connection) -> bool:
+        return (
+            self.FROM_NODE == c.FROM_NODE and
+            self.TO_NODE == c.TO_NODE
+        )
+
     def similar(self, connection: Connection) -> bool:
         return (
-            self.FROM_NODE == connection.FROM_NODE and
-            self.TO_NODE == connection.TO_NODE and
+            self.same_connection(connection) and
             self.weight == connection.weight
         )
 
     @staticmethod
     def crossover(c1: Connection, c2: Connection) -> Connection:
-        pass
+        # TODO find a good way to figure out if connections are equal
+        # Check that the connections are from the same node to the same node
+        if not c1.same_connection(c2):
+            raise ValueError(f"Trying to crossover Connections that are not similar. c1: {c1.FROM_NODE} -> {c1.TO_NODE} / c2: {c2.FROM_NODE} -> {c2.TO_NODE}.")
+
+        # Note: we use "a if random() > 0.5 else b" instead of choice((a, b))
+        # here because `choice` is substantially slower.
+        _weight = c1.weight if random.random() > 0.5 else c2.weight
+
+        return Connection(c1.FROM_NODE, c2.TO_NODE, weight=_weight)

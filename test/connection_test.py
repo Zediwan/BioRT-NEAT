@@ -102,6 +102,25 @@ class TestCopy(TestConnection):
         self.assertEqual(con.TO_NODE, con_copy.TO_NODE)
         self.assertEqual(con.weight, con_copy.weight)
 
+class TestSameConnection(TestConnection):
+    def test_same_connection_true(self):
+        con1 = Connection(self.from_node, self.to_node, weight=1)
+        con2 = Connection(self.from_node, self.to_node, weight=1)
+
+        self.assertTrue(con1.same_connection(con2))
+
+    def test_same_connection_false_from_node(self):
+        con1 = Connection(Node(Activation.CLAMPED, agg=Aggregation.MEAN), self.to_node, weight=1)
+        con2 = Connection(self.from_node, self.to_node, weight=1)
+
+        self.assertFalse(con1.same_connection(con2))
+
+    def test_same_connection_false_to_node(self):
+        con1 = Connection(self.from_node, Node(Activation.CLAMPED, agg=Aggregation.MEAN), weight=1)
+        con2 = Connection(self.from_node, self.to_node, weight=1)
+
+        self.assertFalse(con1.same_connection(con2))
+
 class TestSimilar(TestConnection):
     def test_similar_true(self):
         con1 = Connection(self.from_node, self.to_node, weight=1)
@@ -126,3 +145,59 @@ class TestSimilar(TestConnection):
         con2 = Connection(self.from_node, self.to_node, weight=1)
 
         self.assertFalse(con1.similar(con2))
+
+class TestCrossover(TestConnection):
+    def test_crossover_valid(self):
+        fn = Node(
+            Activation.ID,
+            Aggregation.MAX,
+            bias=1,
+            response=1
+        )
+        tn = Node(
+            Activation.ID,
+            Aggregation.MAX,
+            bias=1,
+            response=1
+        )
+        w1 = 1
+        w2 = 2
+
+        con1 = Connection(fn, tn, weight=w1)
+        con2 = Connection(fn, tn, weight=w2)
+        con3 = Connection.crossover(con1, con2)
+
+        self.assertIn(con3.weight, [w1, w2])
+
+    def test_crossover_invalid(self):
+        fn1 = Node(
+            Activation.ID,
+            Aggregation.MAX,
+            bias=1,
+            response=1
+        )
+        fn2 = Node(
+            Activation.CLAMPED,
+            Aggregation.MIN,
+            bias=2,
+            response=2
+        )
+        tn1 = Node(
+            Activation.ID,
+            Aggregation.MAX,
+            bias=1,
+            response=1
+        )
+        tn2 = Node(
+            Activation.CLAMPED,
+            Aggregation.MIN,
+            bias=2,
+            response=2
+        )
+        w1 = 1
+        w2 = 2
+
+        con1 = Connection(fn1, tn1, weight=w1)
+        con2 = Connection(fn2, tn2, weight=w2)
+
+        self.assertRaises(ValueError, Connection.crossover, con1, con2)
