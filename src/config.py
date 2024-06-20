@@ -28,27 +28,24 @@ class conf:
         elite_ratio = 0.35
 
     class mut:
-        # Structure
-        new_node_proba = 0.05
-        new_conn_proba = 0.8
-        # Node
-        new_bias_proba = 0.2
-        new_response_proba = 0.2
-        new_af_proba = 0.2
-        new_agg_proba = 0.2
-        bias_sigma = 1
-        response_sigma = 1
+        class struct:
+            new_node_proba = 0.05
+            new_conn_proba = 0.8
 
-        # Connection
-        new_weight_proba = 0.2
-        weight_sigma = 1
+        class node:
+            new_bias_proba = 0.2
+            new_response_proba = 0.2
+            new_af_proba = 0.2
+            new_agg_proba = 0.2
+            bias_sigma = 1
+            response_sigma = 1
 
-        weight_range = 1.0
-        weight_small_range = 0.01
-        mut_count = 4
-        max_hidden_nodes = 30
+        class connection:
+            new_weight_proba = 0.2
+            weight_sigma = 1
 
-    class exp:
-        seed_offset = 101
-        best_save_period = 10
-        exploration_period = 1000
+        class network:
+            weight_range = 1.0
+            weight_small_range = 0.01
+            mut_count = 4
+            max_hidden_nodes = 30

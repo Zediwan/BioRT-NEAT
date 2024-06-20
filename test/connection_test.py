@@ -62,14 +62,14 @@ class TestSendValue(TestConnection):
 class TestMutate(TestConnection):
     def setUp(self) -> None:
         super().setUp()
-        self.old_new_weight_proba = conf.mut.new_weight_proba
+        self.old_new_weight_proba = conf.mut.connection.new_weight_proba
 
     def tearDown(self) -> None:
         super().tearDown()
-        conf.mut.new_weight_proba = self.old_new_weight_proba
+        conf.mut.connection.new_weight_proba = self.old_new_weight_proba
 
     def test_mutate_zero_probas(self):
-        conf.mut.new_weight_proba = 0
+        conf.mut.connection.new_weight_proba = 0
 
         con = Connection(self.from_node, self.to_node)
         pre_mutate_weight = con.weight
@@ -79,7 +79,7 @@ class TestMutate(TestConnection):
         self.assertEqual(con.weight, pre_mutate_weight, f"Weight value did change despite 0% mutation chance.")
 
     def test_mutate_guaranteed(self):
-        conf.mut.new_weight_proba = 1
+        conf.mut.connection.new_weight_proba = 1
 
         con = Connection(self.from_node, self.to_node)
         pre_mutate_weight = con.weight
@@ -90,7 +90,7 @@ class TestMutate(TestConnection):
 
     @patch("random.random")
     def test_mutate_lower_edge(self, mock_random):
-        conf.mut.new_weight_proba = 0
+        conf.mut.connection.new_weight_proba = 0
         mock_random.return_value = 0
 
         con = Connection(self.from_node, self.to_node)

@@ -43,13 +43,13 @@ class Node(Gene):
         return self.activation(self.bias + (self.response * self.aggregation(self._values)))
     
     def mutate(self) -> None:
-        if random.random() <= conf.mut.new_af_proba:
+        if random.random() <= conf.mut.node.new_af_proba:
             self._mutate_activation_function()
-        if random.random() <= conf.mut.new_agg_proba:
+        if random.random() <= conf.mut.node.new_agg_proba:
             self._mutate_aggregation_function()
-        if random.random() <= conf.mut.new_bias_proba:
+        if random.random() <= conf.mut.node.new_bias_proba:
             self._mutate_bias()
-        if random.random() <= conf.mut.new_response_proba:
+        if random.random() <= conf.mut.node.new_response_proba:
             self._mutate_response()
 
     def _mutate_activation_function(self) -> None:
@@ -59,10 +59,10 @@ class Node(Gene):
         self.aggregation = Aggregation.get_random(self.aggregation)
 
     def _mutate_bias(self) -> None:
-        self.bias += random.gauss(sigma=conf.mut.bias_sigma)
+        self.bias += random.gauss(sigma=conf.mut.node.bias_sigma)
 
     def _mutate_response(self) -> None:
-        self.response += random.gauss(sigma=conf.mut.response_sigma)
+        self.response += random.gauss(sigma=conf.mut.node.response_sigma)
 
     def copy(self) -> Node:
         return Node(af=self.activation, agg=self.aggregation, bias=self.bias, response=self.response)

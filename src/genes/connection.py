@@ -32,11 +32,11 @@ class Connection(Gene):
 
     def mutate(self) -> None:
         # Note: random.random never returns a value of 1 so this should not be an issue that the case 1 < 1 occurs.
-        if random.random() < conf.mut.new_weight_proba:
+        if random.random() < conf.mut.connection.new_weight_proba:
             self._mutate_weight()
 
     def _mutate_weight(self) -> None:
-        self.weight += random.gauss(sigma=conf.mut.weight_sigma)
+        self.weight += random.gauss(sigma=conf.mut.connection.weight_sigma)
 
     def copy(self) -> Connection:
         return Connection(self.FROM_NODE, self.TO_NODE, self.weight)
