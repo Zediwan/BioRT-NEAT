@@ -14,7 +14,7 @@ class Node(Gene):
             af = Activation.ID
         Activation.assert_activation(af)
         if agg is None:
-            agg = Aggregation.get_random()
+            agg = Aggregation.MEAN
         Aggregation.assert_aggregation(agg)
         
         if not isinstance(bias, (float, int)):
