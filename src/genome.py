@@ -10,71 +10,92 @@ from .genes.connection import Connection
 
 class Genome():
     def __init__(self, inputs: list[Node] = None, outputs: list[Node] = None, num_inputs: int = None, num_outputs: int = None, fully_connect: bool = None, num_starting_connections: int = None) -> None:
-        if (inputs is None and num_inputs is None) or (inputs is not None and num_inputs is not None):
-            raise ValueError("Cannot have both inputs and num_inputs be None or both defined. (Only one can be given)")
-        if (outputs is None and num_outputs is None) or (outputs is not None and num_outputs is not None):
-            raise ValueError("Cannot have both outputs and num_outputs be None or both defined. (Only one can be given)")
-        if (fully_connect is None and num_starting_connections is None) or (fully_connect is not None and num_starting_connections is not None):
-            raise ValueError("Cannot have both fully_connect and num_starting_connections defined, or cannot have both be undefined. (Only one can be given)")
+        """
+        Initialize a Genome object with input and output nodes, optionally creating connections between them.
+
+        Args:
+            inputs (list[Node]): List of input Node objects.
+            outputs (list[Node]): List of output Node objects.
+            num_inputs (int): Number of input nodes.
+            num_outputs (int): Number of output nodes.
+            fully_connect (bool): Whether to fully connect input and output nodes.
+            num_starting_connections (int): Number of initial connections.
+
+        Raises:
+            ValueError: If conflicting arguments are provided.
+            TypeError: If arguments have incorrect types.
+        """
+        # Check argument conflicts
+        if (inputs is None) == (num_inputs is None):
+            raise ValueError("Exactly one of inputs or num_inputs should be provided.")
+        if (outputs is None) == (num_outputs is None):
+            raise ValueError("Exactly one of outputs or num_outputs should be provided.")
+        if (fully_connect is None) == (num_starting_connections is None):
+            raise ValueError("Exactly one of fully_connect or num_starting_connections should be provided.")
 
         self.input_nodes: list[Node] = []
         self.output_nodes: list[Node] = []
         self.nodes: list[Node] = []
         self.connections: list[Connection] = []
 
-        # Type checks
+        # If inputs are given add them
         if inputs is not None:
-            if not isinstance(inputs, list) or not all(isinstance(node, Node) for node in inputs):
+            # Type check
+            if not all(isinstance(node, Node) for node in inputs):
                 raise TypeError("Inputs must be a list of Node instances.")
             self.input_nodes = inputs
             self.nodes.extend(inputs)
+        # If outputs are given add them
         if outputs is not None:
-            if not isinstance(outputs, list) or not all(isinstance(node, Node) for node in outputs):
+            # Type check
+            if not all(isinstance(node, Node) for node in outputs):
                 raise TypeError("Outputs must be a list of Node instances.")
             self.output_nodes = outputs
             self.nodes.extend(outputs)
+        # If num of inputs is given, create and add them
         if num_inputs is not None:
-            if not isinstance(num_inputs, int):
-                raise TypeError("num_inputs must be an integer.")
+            # Value check
             if num_inputs <= 0:
                 raise ValueError("num_inputs must be a positive integer.")
-            for n in range(num_inputs):
-                input_node = Node()
-                self.input_nodes.append(input_node)
-                self.nodes.append(input_node)
+            self.input_nodes.extend(Node() for _ in range(num_inputs))
+            self.nodes.extend(self.input_nodes)
+        # If num of outputs are given, create and add them
         if num_outputs is not None:
-            if not isinstance(num_outputs, int):
-                raise TypeError("num_outputs must be an integer.")
-            if  num_outputs <= 0:
+            # Value check
+            if num_outputs <= 0:
                 raise ValueError("num_outputs must be a positive integer.")
-            for n in range(num_outputs):
-                output_node = Node()
-                self.output_nodes.append(output_node)
-                self.nodes.append(output_node)
+            self.output_nodes.extend(Node() for _ in range(num_outputs))
+            self.nodes.extend(self.output_nodes)
+        # Check arg conflict
         if fully_connect is not None:
+            # Type check
             if not isinstance(fully_connect, bool):
-                raise TypeError("fully_connect must be a boolean.")
+                raise TypeError("fully_connect must be a boolean")
+            if num_starting_connections is None and not fully_connect:
+                raise ValueError("Cannot have fully_connect as False without providing num_starting_connections.")
+        # If num starting connections is give, create and add them
         if num_starting_connections is not None:
-            if not isinstance(num_starting_connections, int):
-                raise TypeError("num_starting_connections must be an integer.")
+            # Value check
             if num_starting_connections <= 0:
                 raise ValueError("num_starting_connections must be a positive integer.")
-            # Num connections cannot exceed the maximum possible connections
-            num_starting_connections = max(num_starting_connections, len(self.input_nodes) * len(self.output_nodes))
-            # Randomly choose connections to be made
-            cons: list[Connection] = random.choices(
-                list[itertools.product(self.input_nodes, self.output_nodes)],
-                k = num_starting_connections
+            # Limit the number of starting connections to the possible max
+            num_starting_connections = min(num_starting_connections, len(self.input_nodes) * len(self.output_nodes))
+            # Randomly choose nodes to connect
+            con_tuples: list[tuple[Node, Node]] = random.choices(
+                list[itertools.combinations(self.input_nodes, self.output_nodes)],
+                k=num_starting_connections
             )
-        elif not fully_connect:
-            raise ValueError("Cannot have fully_connect be false and not provide num_starting_connections")
-        else:
+            # Create the connections
+            for con_tuple in con_tuples:
+                self._add_connection(from_node=con_tuple[0], to_node=con_tuple[1])
+        # Else fully connect the nodes
+        elif fully_connect:
             self._fully_connect()
 
     def _fully_connect(self):
         for input_node in self.input_nodes:
             for output_node in self.output_nodes:
-                self._add_connection(input_node, output_node)
+                self._add_connection(from_node=input_node, to_node=output_node)
 
     def mutate(self) -> None:
         pass
