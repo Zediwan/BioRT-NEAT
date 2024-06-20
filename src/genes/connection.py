@@ -42,12 +42,18 @@ class Connection(Gene):
         return Connection(self.FROM_NODE, self.TO_NODE, self.weight)
 
     def same_connection(self, c: Connection) -> bool:
+        if not isinstance(c, Connection):
+            raise TypeError(f"c needs to be a Connection.")
+
         return (
             self.FROM_NODE == c.FROM_NODE and
             self.TO_NODE == c.TO_NODE
         )
 
     def similar(self, connection: Connection) -> bool:
+        if not isinstance(connection, Connection):
+            raise TypeError(f"connection needs to be a Connection.")
+
         return (
             self.same_connection(connection) and
             self.weight == connection.weight
@@ -55,6 +61,10 @@ class Connection(Gene):
 
     @staticmethod
     def crossover(c1: Connection, c2: Connection) -> Connection:
+        if not isinstance(c1, Connection):
+            raise TypeError(f"c1 needs to be an instance of Connection")
+        if not isinstance(c2, Connection):
+            raise TypeError(f"c2 needs to be an instance of Connection")
         # TODO find a good way to figure out if connections are equal
         # Check that the connections are from the same node to the same node
         if not c1.same_connection(c2):

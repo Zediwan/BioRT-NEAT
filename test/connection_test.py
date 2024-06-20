@@ -136,6 +136,12 @@ class TestSameConnection(TestConnection):
 
         self.assertFalse(con1.same_connection(con2))
 
+    def test_same_connection_exception(self):
+        con1 = Connection(self.from_node, Node(Activation.CLAMPED, agg=Aggregation.MEAN), weight=1)
+        con2 = "not a connection"
+
+        self.assertRaises(TypeError, con1.same_connection, con2)
+
 class TestSimilar(TestConnection):
     def test_similar_true(self):
         con1 = Connection(self.from_node, self.to_node, weight=1)
@@ -160,6 +166,12 @@ class TestSimilar(TestConnection):
         con2 = Connection(self.from_node, self.to_node, weight=1)
 
         self.assertFalse(con1.similar(con2))
+
+    def test_similar_exception(self):
+        con1 = Connection(self.from_node, Node(Activation.CLAMPED, agg=Aggregation.MEAN), weight=1)
+        con2 = "not a connection"
+
+        self.assertRaises(TypeError, con1.similar, con2)
 
 class TestCrossover(TestConnection):
     def test_crossover_valid(self):
@@ -259,7 +271,7 @@ class TestCrossover(TestConnection):
 
         self.assertEqual(con3.weight, w2)
 
-    def test_crossover_invalid(self):
+    def test_crossover_not_similar_connections(self):
         fn1 = Node(
             Activation.ID,
             Aggregation.MAX,
@@ -291,3 +303,43 @@ class TestCrossover(TestConnection):
         con2 = Connection(fn2, tn2, weight=w2)
 
         self.assertRaises(ValueError, Connection.crossover, con1, con2)
+
+    def test_crossover_exception_left(self):
+        fn = Node(
+            Activation.ID,
+            Aggregation.MAX,
+            bias=1,
+            response=1
+        )
+        tn = Node(
+            Activation.ID,
+            Aggregation.MAX,
+            bias=1,
+            response=1
+        )
+        w = 1
+
+        con1 = Connection(fn, tn, weight=w)
+        con2 = "not a connection"
+
+        self.assertRaises(TypeError, Connection.crossover, con1, con2)
+
+    def test_crossover_exception_right(self):
+        fn = Node(
+            Activation.ID,
+            Aggregation.MAX,
+            bias=1,
+            response=1
+        )
+        tn = Node(
+            Activation.ID,
+            Aggregation.MAX,
+            bias=1,
+            response=1
+        )
+        w = 1
+
+        con1 = "not a connection"
+        con2 = Connection(fn, tn, weight=w)
+
+        self.assertRaises(TypeError, Connection.crossover, con1, con2)
