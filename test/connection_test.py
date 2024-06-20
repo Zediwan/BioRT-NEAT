@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from src.genes.node import Node
 from src.genes.connection import Connection
@@ -168,6 +169,81 @@ class TestCrossover(TestConnection):
         con3 = Connection.crossover(con1, con2)
 
         self.assertIn(con3.weight, [w1, w2])
+
+    @patch("random.random")
+    def test_crossover_valid_left(self, mock_random):
+        fn = Node(
+            Activation.ID,
+            Aggregation.MAX,
+            bias=1,
+            response=1
+        )
+        tn = Node(
+            Activation.ID,
+            Aggregation.MAX,
+            bias=1,
+            response=1
+        )
+        w1 = 1
+        w2 = 2
+
+        mock_random.return_value = 1
+
+        con1 = Connection(fn, tn, weight=w1)
+        con2 = Connection(fn, tn, weight=w2)
+        con3 = Connection.crossover(con1, con2)
+
+        self.assertEqual(con3.weight, w1)
+
+    @patch("random.random")
+    def test_crossover_valid_right(self, mock_random):
+        fn = Node(
+            Activation.ID,
+            Aggregation.MAX,
+            bias=1,
+            response=1
+        )
+        tn = Node(
+            Activation.ID,
+            Aggregation.MAX,
+            bias=1,
+            response=1
+        )
+        w1 = 1
+        w2 = 2
+
+        mock_random.return_value = 0
+
+        con1 = Connection(fn, tn, weight=w1)
+        con2 = Connection(fn, tn, weight=w2)
+        con3 = Connection.crossover(con1, con2)
+
+        self.assertEqual(con3.weight, w2)
+
+    @patch("random.random")
+    def test_crossover_valid_edge(self, mock_random):
+        fn = Node(
+            Activation.ID,
+            Aggregation.MAX,
+            bias=1,
+            response=1
+        )
+        tn = Node(
+            Activation.ID,
+            Aggregation.MAX,
+            bias=1,
+            response=1
+        )
+        w1 = 1
+        w2 = 2
+
+        mock_random.return_value = 0.5
+
+        con1 = Connection(fn, tn, weight=w1)
+        con2 = Connection(fn, tn, weight=w2)
+        con3 = Connection.crossover(con1, con2)
+
+        self.assertEqual(con3.weight, w2)
 
     def test_crossover_invalid(self):
         fn1 = Node(
