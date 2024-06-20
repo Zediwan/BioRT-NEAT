@@ -280,3 +280,15 @@ class TestCrossover(TestNode):
         self.assertIn(child_node.aggregation, (node1.aggregation, node2.aggregation))
         self.assertIn(child_node.bias, (node1.bias, node2.bias))
         self.assertIn(child_node.response, (node1.response, node2.response))
+
+    def test_crossover_exception_left(self):
+        node1 = "not a node"
+        node2 = Node(Activation.get_random(self._af), Aggregation.get_random(self._agg), self._bias + 1, self._response + 1)
+
+        self.assertRaises(TypeError, Node.crossover, node1, node2)
+
+    def test_crossover_exception_right(self):
+        node1 = Node(self._af, self._agg, self._bias, self._response)
+        node2 = "not a node"
+
+        self.assertRaises(TypeError, Node.crossover, node1, node2)

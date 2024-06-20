@@ -81,6 +81,11 @@ class Node(Gene):
     @staticmethod
     def crossover(n1: Node, n2: Node) -> Node:
         """ Creates a new gene randomly inheriting attributes from its parents."""
+        if not isinstance(n1, Node):
+            raise TypeError(f"n1 needs to be instance of Node.")
+        if not isinstance(n2, Node):
+            raise TypeError(f"n1 needs to be instance of Node.")
+
         # Note: we use "a if random() > 0.5 else b" instead of choice((a, b))
         # here because `choice` is substantially slower.
         bias = n1.bias if random.random() > 0.5 else n2.bias
