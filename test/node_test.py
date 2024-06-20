@@ -250,14 +250,14 @@ class TestCopy(TestNode):
         self.assertEqual(node.bias, node_copy.bias)
         self.assertEqual(node.response, node_copy.response)
 
-class TestEquals(TestNode):
-    def test_equals_true(self):
+class TestSimilar(TestNode):
+    def test_similar_true(self):
         node1 = Node(self._af, self._agg, self._bias, self._response)
         node2 = Node(self._af, self._agg, self._bias, self._response)
 
         self.assertTrue(node1.similar(node2))
 
-    def test_equals_false(self):
+    def test_similar_false(self):
         node1 = Node(self._af, self._agg, self._bias, self._response)
         node2 = Node(self._af, self._agg, self._bias + 1, self._response)
 
