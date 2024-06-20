@@ -33,7 +33,8 @@ class Connection(Gene):
         self.TO_NODE.recieve_value(weighted_value)
 
     def mutate(self) -> None:
-        if random.random() <= conf.mut.new_weight_proba:
+        # Note: random.random never returns a value of 1 so this should not be an issue that the case 1 < 1 occurs.
+        if random.random() < conf.mut.new_weight_proba:
             self._mutate_weight()
 
     def _mutate_weight(self) -> None:

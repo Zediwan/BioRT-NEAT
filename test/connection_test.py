@@ -74,7 +74,7 @@ class TestMutate(TestConnection):
 
         con.mutate()
 
-        self.assertEqual(con.weight, pre_mutate_weight, f"Weight value did change despite 0% mutation chance. Before: {pre_mutate_weight} != after: {con.weight}.")
+        self.assertEqual(con.weight, pre_mutate_weight, f"Weight value did change despite 0% mutation chance.")
 
     def test_mutate_guaranteed(self):
         conf.mut.new_weight_proba = 1
@@ -84,7 +84,19 @@ class TestMutate(TestConnection):
 
         con.mutate()
 
-        self.assertNotEqual(con.weight, pre_mutate_weight, f"Weight value did not change despite 100% mutation chance. Before: {pre_mutate_weight} == after: {con.weight}.")
+        self.assertNotEqual(con.weight, pre_mutate_weight, f"Weight value did not change despite 100% mutation chance.")
+
+    @patch("random.random")
+    def test_mutate_lower_edge(self, mock_random):
+        conf.mut.new_weight_proba = 0
+        mock_random.return_value = 0
+
+        con = Connection(self.from_node, self.to_node)
+        pre_mutate_weight = con.weight
+
+        con.mutate()
+
+        self.assertEqual(con.weight, pre_mutate_weight, f"Weight value did change despite 0% mutation chance.")
 
 class TestMutateWeight(TestConnection):
     def test_mutate_weight(self):
