@@ -68,6 +68,9 @@ class Node(Gene):
         return Node(af=self.activation, agg=self.aggregation, bias=self.bias, response=self.response)
 
     def similar(self, node: Node) -> bool:
+        if not isinstance(node, Node):
+            raise TypeError(f"node argument needs to be of type Node.")
+
         return (
             (self.activation == node.activation) and
             (self.aggregation == node.aggregation) and

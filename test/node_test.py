@@ -263,6 +263,12 @@ class TestSimilar(TestNode):
 
         self.assertFalse(node1.similar(node2))
 
+    def test_similar_exception(self):
+        node1 = Node(self._af, self._agg, self._bias, self._response)
+        node2 = "test"
+
+        self.assertRaises(TypeError, node1.similar, node2)
+
 class TestCrossover(TestNode):
     def test_crossover(self):
         node1 = Node(self._af, self._agg, self._bias, self._response)
