@@ -4,8 +4,6 @@ import random
 
 from .gene import Gene
 from .node import Node
-from ..functions.activation import Activation
-from ..functions.aggregation import Aggregation
 from ..config import conf
 
 class Connection(Gene):
