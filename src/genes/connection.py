@@ -43,7 +43,11 @@ class Connection(Gene):
         return Connection(self.FROM_NODE, self.TO_NODE, self.weight)
 
     def similar(self, connection: Connection) -> bool:
-        pass
+        return (
+            self.FROM_NODE == connection.FROM_NODE and
+            self.TO_NODE == connection.TO_NODE and
+            self.weight == connection.weight
+        )
 
     @staticmethod
     def crossover(c1: Connection, c2: Connection) -> Connection:

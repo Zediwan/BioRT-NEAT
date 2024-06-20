@@ -101,3 +101,28 @@ class TestCopy(TestConnection):
         self.assertEqual(con.FROM_NODE, con_copy.FROM_NODE)
         self.assertEqual(con.TO_NODE, con_copy.TO_NODE)
         self.assertEqual(con.weight, con_copy.weight)
+
+class TestSimilar(TestConnection):
+    def test_similar_true(self):
+        con1 = Connection(self.from_node, self.to_node, weight=1)
+        con2 = Connection(self.from_node, self.to_node, weight=1)
+
+        self.assertTrue(con1.similar(con2))
+
+    def test_similar_false_weight(self):
+        con1 = Connection(self.from_node, self.to_node, weight=1)
+        con2 = Connection(self.from_node, self.to_node, weight=2)
+
+        self.assertFalse(con1.similar(con2))
+
+    def test_similar_false_from_node(self):
+        con1 = Connection(Node(Activation.CLAMPED, agg=Aggregation.MEAN), self.to_node, weight=1)
+        con2 = Connection(self.from_node, self.to_node, weight=1)
+
+        self.assertFalse(con1.similar(con2))
+
+    def test_similar_false_to_node(self):
+        con1 = Connection(self.from_node, Node(Activation.CLAMPED, agg=Aggregation.MEAN), weight=1)
+        con2 = Connection(self.from_node, self.to_node, weight=1)
+
+        self.assertFalse(con1.similar(con2))
