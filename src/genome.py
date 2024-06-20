@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import random
 
+from .config import conf
 from .genes.node import Node
 from .genes.connection import Connection
 

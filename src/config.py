@@ -31,6 +31,9 @@ class conf:
         class struct:
             new_node_proba = 0.05
             new_conn_proba = 0.8
+            del_node_proba = 0.05
+            del_conn_proba = 0.8
+            max_hidden_nodes = 30
 
         class node:
             new_bias_proba = 0.2
@@ -48,4 +51,3 @@ class conf:
             weight_range = 1.0
             weight_small_range = 0.01
             mut_count = 4
-            max_hidden_nodes = 30
