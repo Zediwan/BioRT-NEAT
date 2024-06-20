@@ -112,12 +112,13 @@ class TestInit_NumOutputsNumInputs_FullyConnected(TestGenome):
             self.assertEqual(len(output_node.out_connections), 0, "Output node has output connections")
 
 class TestInit_OutputsInputs_NumConnections(TestGenome):
-    pass
+    # TODO write tests
 
     def test_init_num_connections_exeeds_max(self):
         pass
 
 class TestInit_NumOutputsNumInputs_NumConnections(TestGenome):
+    # TODO write tests
     pass
 
 class TestInit_Exceptions(TestGenome):
@@ -257,37 +258,49 @@ class TestInit_Exceptions(TestGenome):
         )
 
 class TestMutate(TestGenome):
+    # TODO write tests
     pass
 
 class TestMutateAddNewConnection(TestGenome):
+    # TODO write tests
     pass
 
 class TestMutateAddNewNode(TestGenome):
+    # TODO write tests
     pass
 
 class TestMutateDeleteConnection(TestGenome):
+    # TODO write tests
     pass
 
 class TestMutateDeleteNode(TestGenome):
+    # TODO write tests
     pass
 
 class TestAddConnection(TestGenome):
+    # TODO write tests
     pass
 
 class TestAddNode(TestGenome):
+    # TODO write tests
     pass
 
 class TestDeleteConnection(TestGenome):
+    # TODO write tests
     pass
 
 class TestDeleteNode(TestGenome):
+    # TODO write tests
     pass
 
 class TestCopy(TestGenome):
+    # TODO write tests
     pass
 
 class TestAreNodesConnected(TestGenome):
+    # TODO write tests
     pass
 
 class TestCrossover(TestGenome):
+    # TODO write tests
     pass
