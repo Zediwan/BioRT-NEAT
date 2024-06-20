@@ -39,8 +39,8 @@ class Connection(Gene):
     def _mutate_weight(self) -> None:
         self.weight += random.gauss(sigma=conf.mut.weight_sigma)
 
-    def copy(self) -> None:
-        pass
+    def copy(self) -> Connection:
+        return Connection(self.FROM_NODE, self.TO_NODE, self.weight)
 
     def similar(self, connection: Connection) -> bool:
         pass

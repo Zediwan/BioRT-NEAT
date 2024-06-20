@@ -92,3 +92,12 @@ class TestMutateWeight(TestConnection):
         connection._mutate_weight()
 
         self.assertNotEqual(connection.weight, pre_mut_weight, f"Weight value did not change after mutation. Before: {pre_mut_weight} == after: {connection.weight}.")
+
+class TestCopy(TestConnection):
+    def test_copy(self):
+        con = Connection(self.from_node, self.to_node)
+        con_copy = con.copy()
+
+        self.assertEqual(con.FROM_NODE, con_copy.FROM_NODE)
+        self.assertEqual(con.TO_NODE, con_copy.TO_NODE)
+        self.assertEqual(con.weight, con_copy.weight)
