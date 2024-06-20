@@ -26,3 +26,36 @@ class TestInit(TestGenome):
     
     def test_init_invalid_type_args(self):
         pass
+
+class TestMutate(TestGenome):
+    pass
+
+class TestMutateAddNewConnection(TestGenome):
+    pass
+
+class TestMutateAddNewNode(TestGenome):
+    pass
+
+class TestMutateDeleteConnection(TestGenome):
+    pass
+
+class TestMutateDeleteNode(TestGenome):
+    pass
+
+class TestAddConnection(TestGenome):
+    pass
+
+class TestAddNode(TestGenome):
+    pass
+
+class TestDeleteConnection(TestGenome):
+    pass
+
+class TestDeleteNode(TestGenome):
+    pass
+
+class TestCopy(TestGenome):
+    pass
+
+class TestCrossover(TestGenome):
+    pass
