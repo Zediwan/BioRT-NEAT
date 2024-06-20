@@ -7,6 +7,8 @@ from src.functions.activation import Activation
 from src.functions.aggregation import Aggregation
 from src.config import conf
 
+# TODO write documentation for all the tests, about what part they are testing
+
 class TestConnection(unittest.TestCase):
     def setUp(self) -> None:
         self.from_node = Node()
