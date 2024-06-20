@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import random
+
 from .genes.node import Node
 from .genes.connection import Connection
 
 
 class Genome():
-    def __init__(self) -> None:
+    def __init__(self, inputs: list[Node], outputs: list[Node], fully_connect: bool = False, num_starting_connections: int | float = None) -> None:
         self.nodes: list[Node] = []
         self.connections: list[Connection] = []
 
