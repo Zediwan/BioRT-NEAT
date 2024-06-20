@@ -46,12 +46,12 @@ class TestInit(TestNode):
     def test_init_invalid_response_arg(self):
         self.assertRaises(TypeError, Node, af=self._af, agg=self._agg, bias=self._bias, response="test")
 
-class TestRecieveCalue(TestNode):
-    def test_reciev_value_valid(self):
+class TestRecieveValue(TestNode):
+    def test_recieve_value_valid(self):
         node = Node(af=Activation.get_random(), agg=Aggregation.get_random())
         node.recieve_value(1)
 
-    def test_recieve_value_invalid(self):
+    def test_recieve_value_exception(self):
         node = Node(af=Activation.get_random(), agg=Aggregation.get_random())
         self.assertRaises(TypeError, node.recieve_value, "test")
 
