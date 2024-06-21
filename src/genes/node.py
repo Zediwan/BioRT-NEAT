@@ -7,6 +7,8 @@ from ..functions.activation import Activation
 from ..functions.aggregation import Aggregation
 from ..config import conf
 
+# TODO write a is_connected_to method that checks if a node is connected to another node
+# TODO add a get_connected_nodes method that returns a list of all targets from this nodes connections
 
 class Node(Gene):
     def __init__(self, af: Activation = None, agg: Aggregation = None, bias: float = 0, response: float = 1) -> None:
@@ -31,6 +33,10 @@ class Node(Gene):
         from .connection import Connection
         self.out_connections: list[Connection] = []
         self._values: list[float] = []
+
+    @property
+    def num_out_connections(self) -> int:
+        return len(self.out_connections)
 
     def recieve_value(self, value: float):
         if not isinstance(value, (float, int)):
