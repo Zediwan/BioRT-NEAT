@@ -7,6 +7,7 @@ from .config import conf
 from .genes.node import Node
 from .genes.connection import Connection
 
+# TODO write a method that gets all nodes that still can be connected to another node
 
 class Genome():
     def __init__(self, inputs: list[Node] = None, outputs: list[Node] = None, num_inputs: int = None, num_outputs: int = None, fully_connect: bool = None, num_starting_connections: int = None) -> None:
@@ -81,8 +82,8 @@ class Genome():
             # Limit the number of starting connections to the possible max
             num_starting_connections = min(num_starting_connections, len(self.input_nodes) * len(self.output_nodes))
             # Randomly choose nodes to connect
-            con_tuples: list[tuple[Node, Node]] = random.choices(
-                list[itertools.combinations(self.input_nodes, self.output_nodes)],
+            con_tuples: list[tuple[Node, Node]] = random.sample(
+                list(itertools.product(self.input_nodes, self.output_nodes)),
                 k=num_starting_connections
             )
             # Create the connections
@@ -92,7 +93,20 @@ class Genome():
         elif fully_connect:
             self._fully_connect()
 
+    @property
+    def num_inputs(self) -> int:
+        return len(self.input_nodes)
+
+    @property
+    def num_outputs(self) -> int:
+        return len(self.output_nodes)
+
+    @property
+    def num_hidden(self) -> int:
+        return len(self.nodes) - self.num_inputs - self.num_outputs
+
     def _fully_connect(self):
+        # TODO update this so it can be used when there are already existing connections and it just fills the network up
         for input_node in self.input_nodes:
             for output_node in self.output_nodes:
                 self._add_connection(from_node=input_node, to_node=output_node)
@@ -131,6 +145,14 @@ class Genome():
     
     def are_nodes_connected(self, n1: Node, n2: Node) -> bool:
         pass
+
+    def get_connectable_nodes(self) -> tuple[Node, Node, Node]:
+        # TODO write tests
+        connectable_input_nodes = [input_node for input_node in self.input_nodes if input_node.num_out_connections <= self.num_outputs + self.num_hidden]
+        connectable_hidden_nodes = [] # TODO write method to calculate this
+        connectable_output_nodes = [output_node for output_node in self.output_nodes if output_node.num_in_connections <= self.num_inputs + self.num_hidden]
+
+        return connectable_input_nodes, connectable_hidden_nodes, connectable_output_nodes
 
     @staticmethod
     def crossover(g1: Genome, g2: Genome) -> Genome:

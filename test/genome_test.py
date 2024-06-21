@@ -119,7 +119,39 @@ class TestInit_OutputsInputs_NumConnections(TestGenome):
 
 class TestInit_NumOutputsNumInputs_NumConnections(TestGenome):
     # TODO write tests
-    pass
+    def setUp(self) -> None:
+        super().setUp()
+        self.num_connections = 2
+        self.genome = Genome(num_inputs=self.num_inputs, num_outputs=self.num_outputs, num_starting_connections=self.num_connections)
+
+    def test_num_nodes(self):
+        self.assertEqual(self.num_inputs + self.num_outputs, len(self.genome.nodes), "Number of nodes not as expected")
+        self.assertEqual(self.num_inputs, len(self.genome.input_nodes), "Number of inputs not as expected")
+        self.assertEqual(self.num_outputs, len(self.genome.output_nodes), "Number of outputs not as expected.")
+
+    def test_connections(self):
+        # Check connections
+        num_connections = 0
+        for input_node in self.genome.input_nodes:
+            # Check the input node does not have any input connections
+            self.assertEqual(input_node.num_in_connections, 0, "Input node has input connections.")
+            # Check that the input node doesn't have more than the allowed amount of connections
+            self.assertLessEqual(len(input_node.out_connections), self.num_connections, "Input nodes has more than the set number of connections.")
+            # Go over all the output connections the input node has
+            for out_connection in input_node.out_connections:
+                # Check that each connection of the input node is towards an output node
+                num_connections += 1
+                self.assertIn(out_connection.TO_NODE, self.genome.output_nodes, "Input node has a connection to a non-output node.")
+        self.assertEqual(num_connections, self.num_connections, "Wrong amount of connections.")
+
+        num_connections = 0
+        for output_node in self.genome.output_nodes:
+            # Check that the number of input connections is less than or equal to the number of connections given.
+            self.assertLessEqual(output_node.num_in_connections, self.num_inputs, "Output nodes has more than set number of connections.")
+            # Check that the output does not have any output connections
+            self.assertEqual(len(output_node.out_connections), 0, "Output node has output connections")
+            num_connections += 1
+        self.assertEqual(num_connections, self.num_connections, "Wrong amount of connections.")
 
 class TestInit_Exceptions(TestGenome):
     def test_init_both_inputs_outputs_and_num_inputs_num_outputs_defined_exception(self):
@@ -278,8 +310,39 @@ class TestMutateDeleteNode(TestGenome):
     pass
 
 class TestAddConnection(TestGenome):
-    # TODO write tests
-    pass
+    def setUp(self) -> None:
+        super().setUp()
+        self.num_connections = 1
+        self.genome = Genome(num_inputs=self.num_inputs, num_outputs=self.num_outputs, num_starting_connections=self.num_connections)
+
+    def test_add_connection_valid(self):
+        connectable_input_nodes, connectable_hidden_nodes, connectable_output_nodes = self.genome.get_connectable_nodes()
+
+        from_node: Node = connectable_input_nodes[0]
+        from_num_out_connections = from_node.num_out_connections
+
+        to_node: Node = connectable_output_nodes[0]
+        to_num_in_connections = to_node.num_in_connections
+
+        self.genome._add_connection(from_node, to_node)
+
+        self.assertEqual(from_num_out_connections + 1, from_node.num_out_connections, "Number of out connections of input node has not been incremented.")
+        self.assertIn(to_node, [conn.TO_NODE for conn in from_node.out_connections], "Output node has not been added to input nodes out connections")
+        self.assertEqual(to_num_in_connections + 1, to_node.num_in_connections, "Number of in connections of output node has not been incremented.")
+
+    def test_add_connection_existing(self):
+        con = self.genome.connections[0]
+        from_node = con.FROM_NODE
+        to_node = con.TO_NODE
+        self.assertRaises(ValueError, self.genome._add_connection, from_node, to_node)
+
+    def test_add_connection_same_node(self):
+        connectable_input_nodes, connectable_hidden_nodes, connectable_output_nodes = self.genome.get_connectable_nodes()
+
+        from_node: Node = connectable_input_nodes[0]
+        to_node: Node = from_node
+
+        self.assertRaises(ValueError, self.genome._add_connection, from_node, to_node)
 
 class TestAddNode(TestGenome):
     # TODO write tests
