@@ -7,8 +7,6 @@ from .config import conf
 from .genes.node import Node
 from .genes.connection import Connection
 
-# TODO write a method that gets all nodes that still can be connected to another node
-
 class Genome():
     def __init__(self, inputs: list[Node] = None, outputs: list[Node] = None, num_inputs: int = None, num_outputs: int = None, fully_connect: bool = None, num_starting_connections: int = None) -> None:
         """
@@ -146,7 +144,7 @@ class Genome():
     def are_nodes_connected(self, n1: Node, n2: Node) -> bool:
         pass
 
-    def get_connectable_nodes(self) -> tuple[Node, Node, Node]:
+    def get_connectable_nodes(self) -> tuple[list[Node], list[Node], list[Node]]:
         # TODO write tests
         connectable_input_nodes = [input_node for input_node in self.input_nodes if input_node.num_out_connections <= self.num_outputs + self.num_hidden]
         connectable_hidden_nodes = [] # TODO write method to calculate this
